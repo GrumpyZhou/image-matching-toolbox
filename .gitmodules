@@ -13,7 +13,7 @@
 [submodule "third_party/sparse-ncnet"]
 	path = third_party/sparsencnet
 	url = git@github.com:ignacio-rocco/sparse-ncnet.git
-[submodule "third_party/Hierarchical-Localization"]
+[submodule "third_party/hloc"]
 	path = third_party/hloc
-	branch = extend_base_dev
 	url = git@github.com:GrumpyZhou/Hierarchical-Localization.git
+	branch = extend_base_dev
