@@ -17,3 +17,6 @@
 	path = third_party/hloc
 	url = git@github.com:GrumpyZhou/Hierarchical-Localization.git
 	branch = extend_base_dev
+[submodule "third_party/patch2pix"]
+	path = third_party/patch2pix
+	url = git@github.com:GrumpyZhou/patch2pix.git
