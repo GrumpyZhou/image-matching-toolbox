@@ -1,0 +1,24 @@
+name: immatch
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - cudatoolkit=10.2
+  - python=3.7
+  - pytorch
+  - torchvision
+  - jupyter
+  - scipy
+  - matplotlib
+  - pip
+  - pip:
+      - transforms3d
+      - pydegensac
+      - h5py
+      - opencv-python
+      - opencv-contrib-python==3.4.2.17  # To use SIFT + CAPS 
+      - tqdm
+      - pyyaml
+      - psutil
+  - pillow=6.0.0=py37he7afcd5_0 # To reproduce
