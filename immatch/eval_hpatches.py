@@ -33,6 +33,10 @@ def eval_hpatches(root_dir, config_list, task='both',
             args = yaml.load(f, Loader=yaml.FullLoader)['hpatch']
             if 'ckpt' in args:
                 args['ckpt'] = os.path.join(root_dir, args['ckpt'])
+                if 'coarse' in args and 'ckpt' in args['coarse']:
+                    args['coarse']['ckpt'] = os.path.join(
+                        root_dir, args['coarse']['ckpt']
+                    )
             class_name = args['class']
         
         # One log file per method
