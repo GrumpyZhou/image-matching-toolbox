@@ -1,0 +1,23 @@
+# 'imsize' -1 is equivalent to original arg name 'max_size' 9999 in R2D2's repo.
+default: &default
+    class: 'R2D2'
+    ckpt: 'pretrained/r2d2/r2d2_WASF_N16.pt'
+    top_k: 5000
+    reliability_thr: 0.7
+    repeatability_thr: 0.7
+    min_scale: 0.3
+    max_scale: 1 
+    min_size: 0
+hpatch:
+    <<: *default
+    min_size: 0
+    imsize: -1
+    match_threshold: 0.0
+inloc:
+    <<: *default
+    imsize: 1600
+    match_threshold: 0.0
+    pairs: 'pairs-query-netvlad40-temporal.txt'
+    rthres: 48
+    skip_matches: 20
+    

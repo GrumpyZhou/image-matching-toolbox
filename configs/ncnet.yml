@@ -1,0 +1,7 @@
+# We use the adapted NCNet in Patch2Pix paper, instead of the original NCNet model.
+hpatch:
+    class: 'NCNet'
+    ckpt: 'pretrained/patch2pix/ncn_ivd_5ep.pth'
+    match_threshold: 0.9
+    imsize: 1024
+    ksize: 2

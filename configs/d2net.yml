@@ -1,0 +1,17 @@
+default: &default
+    class: 'D2Net'
+    ckpt: 'pretrained/d2net/d2_tf.pth'
+    use_relu: True
+    multiscale: False
+hpatch:
+    <<: *default
+    match_threshold: 0.0
+    imsize: -1
+inloc:
+    <<: *default
+    match_threshold: 0.0
+    imsize: 1024
+    pairs: 'pairs-query-netvlad40-temporal.txt'
+    rthres: 48
+    skip_matches: 20
+    

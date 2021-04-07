@@ -1,0 +1,22 @@
+default: &default
+    class: 'SparseNCNet'
+    ckpt: 'pretrained/sparsencnet/sparsencnet_k10.pth.tar'
+    benchmark: 0
+    no_ncnet: 0
+    relocalize: 1
+    reloc_type: 'hard_soft'
+    reloc_hard_crop_size: 2
+    change_stride: 1
+    Npts: 2000
+hpatch:
+    <<: *default
+    match_threshold: -1 
+    imsize: 3200
+inloc:
+    <<: *default
+    imsize: 1600
+    match_threshold: -1  
+    pairs: 'pairs-query-netvlad40-temporal.txt'
+    rthres: 48
+    skip_matches: 20
+    

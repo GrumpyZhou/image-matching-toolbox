@@ -1,0 +1,25 @@
+default: &default
+    class: 'CAPS'
+    ckpt: 'pretrained/caps/caps-pretrained.pth'
+    backbone: 'resnet50'
+    pretrained: 1
+    coarse_feat_dim: 128
+    fine_feat_dim: 128
+    prob_from: 'correlation'
+    window_size: 0.125    
+    use_nn: 1
+    detector: 'SuperPoint'
+    nms_radius: 4
+hpatch:
+    <<: *default
+    max_keypoints: -1
+    match_threshold: 0.0
+    imsize: -1
+inloc:
+    <<: *default
+    max_keypoints: 4096
+    match_threshold: 0.75
+    imsize: 1024
+    pairs: 'pairs-query-netvlad40-temporal.txt'
+    rthres: 48
+    skip_matches: 20

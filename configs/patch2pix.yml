@@ -1,0 +1,14 @@
+default: &default
+    class: 'Patch2Pix'
+    ckpt: 'pretrained/patch2pix/patch2pix_pretrained.pth'
+    ksize: 2
+    imsize: 1024
+    match_threshold: 0.25
+hpatch:
+    <<: *default
+inloc:
+    <<: *default
+    pairs: 'pairs-query-netvlad40-temporal.txt' 
+    rthres: 48
+    skip_matches: 20
+    

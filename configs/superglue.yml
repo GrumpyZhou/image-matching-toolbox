@@ -1,0 +1,18 @@
+default: &default
+    class: 'SuperGlue'
+    weights: 'outdoor'
+    sinkhorn_iterations: 20
+    nms_radius: 4
+    match_threshold: 0.2
+hpatch:
+    <<: *default
+    max_keypoints: 1024
+    imsize: -1 
+inloc:
+    <<: *default
+    sinkhorn_iterations: 50
+    max_keypoints: 4096
+    imsize: 1600
+    pairs: 'pairs-query-netvlad40-temporal.txt' 
+    rthres: 48
+    skip_matches: 20
