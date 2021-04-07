@@ -112,7 +112,7 @@ python -m immatch.eval_hpatches --gpu 0 \
 
 ### InLoc
 We adopt the public implementation [Hierarchical Localization](https://github.com/cvg/Hierarchical-Localization) to evaluate matches on InLoc benchmark.
-The following command evaluates  **Patch2Pix** using its setting defined inside [patch2pix.yaml](configs/patch2pix.yaml) :
+The following command evaluates  **Patch2Pix** using its setting defined inside [patch2pix.yml](configs/patch2pix.yml) :
 ```
 # python -m immatch.eval_inloc --gpu 0 \
 	--config 'patch2pix' 
