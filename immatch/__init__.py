@@ -17,5 +17,5 @@ try:
     from .modules.sparsencnet import SparseNCNet     
     use_sparsencnet = True
 except ImportError as e:
-    print('Can not imoprt sparsencnet')
+    print('Can not import sparsencnet')
     pass    
