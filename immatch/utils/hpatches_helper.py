@@ -258,7 +258,6 @@ def eval_hpatches(matcher, data_root, method='', ransac_thres=2,
         for im_idx in range(2, 7):
             im2_path = os.path.join(seq_dir, '{}.ppm'.format(im_idx))
             H_gt = np.loadtxt(os.path.join(seq_dir, 'H_1_{}'.format(im_idx)))
-            match_res = matcher(im1_path, im2_path)
             try:
                 t0 = time.time()
                 match_res = matcher(im1_path, im2_path)
@@ -268,7 +267,7 @@ def eval_hpatches(matcher, data_root, method='', ransac_thres=2,
                 p1s = p2s = matches = []
             n_feats.append(len(p1s))
             n_feats.append(len(p2s))            
-            n_matches.append(matches.shape[0])
+            n_matches.append(len(matches))
             seq_type.append(sname[0])
             
             if len(matches) == 0:
