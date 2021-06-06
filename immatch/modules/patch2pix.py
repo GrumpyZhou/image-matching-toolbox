@@ -8,7 +8,7 @@ sys.path.append(str(patch2pix_path))
 from .base import *
 from third_party.patch2pix.utils.eval.model_helper import load_model, estimate_matches
 import immatch
-from immatch.utils.data_loading import load_im_tensor
+from immatch.utils.data_io import load_im_tensor
 
 
 class Patch2Pix(Matching):

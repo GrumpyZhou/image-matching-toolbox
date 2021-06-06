@@ -5,7 +5,7 @@ import cv2
 from .base import *
 from third_party.caps.CAPS.network import CAPSNet
 from .superpoint import SuperPoint
-from immatch.utils.data_loading import load_im_tensor
+from immatch.utils.data_io import load_im_tensor
 
 class CAPS(FeatureDetection, Matching):
     def __init__(self, args):
