@@ -5,13 +5,7 @@ import yaml
 
 import immatch
 import immatch.utils.hpatches_helper as helper
-
-def lprint(ms, log=None):
-    '''Print message on console and in a log file'''
-    print(ms)
-    if log:
-        log.write(ms+'\n')
-        log.flush()
+from immatch.utils.data_io import lprint
         
 def eval_hpatches(root_dir, config_list, task='both', 
                   match_thres=None,save_npy=False,  print_out=False):

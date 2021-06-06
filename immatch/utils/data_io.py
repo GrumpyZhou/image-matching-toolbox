@@ -1,6 +1,13 @@
 import numpy as np
 import torchvision.transforms as transforms
 
+def lprint(ms, log=None):
+    '''Print message on console and in a log file'''
+    print(ms)
+    if log:
+        log.write(ms+'\n')
+        log.flush()
+
 def read_im(im_path, imsize=None):    
     from PIL import Image
     
