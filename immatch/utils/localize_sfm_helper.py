@@ -5,7 +5,6 @@ from tqdm import tqdm
 import h5py
 import os
 from pathlib import Path
-from third_party.hloc.hloc import triangulation, localize_sfm
 
 def names_to_pair(name0, name1):
     return '_'.join((name0.replace('/', '-'), name1.replace('/', '-')))
@@ -98,6 +97,8 @@ def init_empty_sfm(args):
         logging.error(f'Invalid benchmark {args.benchmark_name}!!')
     
 def reconstruct_database_pairs(args):
+    from third_party.hloc.hloc import triangulation
+    
     # Reconstruct database pairs
     if (args.result_sfm / 'model' / 'images.bin').exists():
         logging.info('Reconstruction existed.')
@@ -114,6 +115,8 @@ def reconstruct_database_pairs(args):
     logging.info('Finished reconstruction.')
     
 def localize_queries(args):
+    from third_party.hloc.hloc import localize_sfm
+    
     # Localize query pairs
     for ransac_thresh in args.ransac_thres:
         localize_txt = f'{args.model_tag}_{args.conf_tag}.{args.pair_tag}.{args.qt_tag}.r{ransac_thresh}.txt'
@@ -223,42 +226,62 @@ def compute_keypoints(pts, kp_data):
         pt_ids.append(kid)
     return pt_ids
 
-def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir):
+def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file):
+    # Pairwise matching
+    num_matches = []
     match_times = []
-    matched = []
-    logging.info(f'\nStart matching {len(pair_list)} pairs')
-    with h5py.File(output_dir/'matches_raw.h5', 'a') as match_file:
-        for pair in tqdm(pair_list, smoothing=.1):
-            name0, name1 = pair.split()
-            pair = names_to_pair(name0, name1)
-            pair_inv = names_to_pair(name1, name0)        
-            if pair_inv in matched:           
-                continue   
+    start_time = time.time()
 
-            if pair in match_file:
-                matched.append(pair)
+    with h5py.File(match_file, 'a') as fmatch:
+        matched = list(fmatch.keys())
+        print(f'\nLoad match file, existing matches {len(matched)}')
+        print(f'Start matching, total {len(pairs)} pairs...')
+        for pair, key in tqdm(zip(pairs, pair_keys), smoothing=.1):
+            im1_path, im2_path = pair
+            if key in matched:
+                num_matches.append(len(fmatch[key]['matches']))
                 continue
 
-            # Perform matching 
             try:
                 t0 = time.time()
-                match_res = matcher(str(im_dir / name0), str(im_dir / name1))
+                match_res = matcher(im1_path, im2_path)
                 match_times.append(time.time() - t0)
             except:
-                logging.info(f'###Failed matching on {name0}, {name1}')
+                print(f'##Failed matching on {key}')
                 continue
-                
+
+            matches = match_res[0]
+            scores = match_res[-1]
+            N = len(matches)
+            num_matches.append(N)
+
             # Save matches
-            grp = match_file.create_group(pair)
-            grp.create_dataset('matches', data=match_res[0])
-            grp.create_dataset('scores', data=match_res[-1])                
-            matched.append(pair)            
-        num_matches = len(match_file.keys())
-        
-    mean_time = np.mean(match_times) if len(match_times) > 0 else 0.0
-    logging.info(f'Finished matched: {len(matched)} existing pairs: {num_matches} '
-                 f'match_time/pair:{mean_time:.2f}s.')
-    
+            grp = fmatch.create_group(key)
+            grp.create_dataset('matches', data=matches)
+            grp.create_dataset('scores', data=scores)
+        total_time = time.time() - start_time
+        mean_time = np.mean(match_times) if len(match_times) > 0 else 0.0
+        print(f'Finished matched pairs: {len(fmatch)} num_matches:{np.mean(num_matches):.2f} '
+              f'match_time/pair:{mean_time:.2f}s time:{total_time:.2f}s.')
+
+def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir):
+    # Construct pairs and pair keys
+    pairs = []
+    pair_keys = []
+    for pair_line in pair_list:
+        name0, name1 = pair_line.split()
+        key = names_to_pair(name0, name1)
+        key_inv = names_to_pair(name1, name0)
+        if key_inv in pair_keys:
+            continue
+
+        pair_keys.append(key)
+        pair = (str(im_dir / name0), str(im_dir / name1))
+        pairs.append(pair)
+
+    match_file = output_dir/'matches_raw.h5'
+    match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file)
+
 def process_matches_and_keypoints_exporth5(pair_list, output_dir, result_dir,    
                                            sc_thres=0.25, qt_dthres=4, qt_psize=48, 
                                            qt_unique=True):
@@ -296,7 +319,7 @@ def process_matches_and_keypoints_exporth5(pair_list, output_dir, result_dir,
         
     match_file = h5py.File(output_dir/'matches_raw.h5', 'r')
     all_kp_data = {}
-    logging.info(f'Start parse matches and quantize keypoints ...')
+    logging.info('Start parse matches and quantize keypoints ...')
     with h5py.File(result_dir/'matches.h5', 'w') as res_fmatch:
         for pair in tqdm(pair_list, smoothing=.1):
             name0, name1 = pair.split()
@@ -348,15 +371,15 @@ def process_matches_and_keypoints_exporth5(pair_list, output_dir, result_dir,
             # Save matches
             grp = res_fmatch.create_group(pair)
             grp.create_dataset('matches0', data=match_ids)
-        match_num = len(res_fmatch.keys())
+        num_pairs = len(res_fmatch.keys())
         
     # Save keypoints
     with h5py.File(result_dir/'keypoints.h5', 'w') as res_fkp:    
-        logging.info(f'Save keypoints ...')
+        logging.info(f'Save keypoints from {len(all_kp_data)} images...')
         for name in tqdm(all_kp_data, smoothing=.1):
             kps = np.array(all_kp_data[name]['kps'], dtype=np.float32)
             kgrp = res_fkp.create_group(name)
-            kgrp.create_dataset('keypoints', data=kps)    
-        logging.info(f'Finished quantization, kps:{len(all_kp_data.keys())} matches:{match_num}')
-
+            kgrp.create_dataset('keypoints', data=kps)
+    logging.info(f'Finished quantization, match pairs:{num_pairs}')
     match_file.close()
+
