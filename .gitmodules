@@ -9,7 +9,7 @@
 	url = git@github.com:mihaidusmanu/d2-net.git
 [submodule "third_party/r2d2"]
 	path = third_party/r2d2
-	url = git@github.com:naver/r2d2.git
+	url = https://github.com/naver/r2d2
 [submodule "third_party/sparse-ncnet"]
 	path = third_party/sparsencnet
 	url = git@github.com:ignacio-rocco/sparse-ncnet.git
