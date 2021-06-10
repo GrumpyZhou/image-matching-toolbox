@@ -333,40 +333,12 @@ def process_matches_and_keypoints_exporth5(pair_list, output_dir, result_dir,
             valid = np.where(scores >= sc_thres)[0]
             matches = matches[valid]
             scores = scores[valid]
-
-            if qt_psize > 0:
-                # Compute keypoints jointly with quantization
-                if name0 not in all_kp_data:
-                    all_kp_data[name0] = {'kps':[], 'kp_means':{}}
-                if name1 not in all_kp_data:
-                    all_kp_data[name1] = {'kps':[], 'kp_means':{}}
-
-                id1s = quantize_keypoints(matches[:, 0:2], all_kp_data[name0], 
-                                          psize=qt_psize, dthres=qt_dthres)
-                id2s = quantize_keypoints(matches[:, 2:4], all_kp_data[name1], 
-                                          psize=qt_psize, dthres=qt_dthres)            
-                match_ids = np.dstack([id1s, id2s]).squeeze()
-
-                # Remove n-to-1 matches after quantization
-                if qt_unique and len(match_ids) > 1:
-                    try:            
-                        uids = get_unique_matches_ids(match_ids, scores)
-                        match_ids = match_ids[uids]
-                        uids = get_unique_matches_ids(match_ids, scores)
-                        match_ids = match_ids[uids]
-                    except:
-                        print(f'Error in unique qt for pair {pair} N={len(match_ids)}')
-                        continue
-            else:
-                # Compute keypoints without quantization            
-                if name0 not in all_kp_data:
-                    all_kp_data[name0] = {'kps':[], 'kpids':{}}
-                if name1 not in all_kp_data:
-                    all_kp_data[name1] = {'kps':[], 'kpids':{}}                
-
-                id1s = compute_keypoints(matches[:, 0:2], all_kp_data[name0])
-                id2s = compute_keypoints(matches[:, 2:4], all_kp_data[name1])
-                match_ids = np.dstack([id1s, id2s]).squeeze()
+            
+            # Compute match ids and quantize keypoints
+            match_ids = matches_to_keypoint_ids(
+                matches, scores, name0, name1, all_kp_data,
+                qt_dthres, qt_psize, qt_unique
+            )
 
             # Save matches
             grp = res_fmatch.create_group(pair)
@@ -382,4 +354,41 @@ def process_matches_and_keypoints_exporth5(pair_list, output_dir, result_dir,
             kgrp.create_dataset('keypoints', data=kps)
     logging.info(f'Finished quantization, match pairs:{num_pairs}')
     match_file.close()
+    
+def matches_to_keypoint_ids(matches, scores, name0, name1, all_kp_data,
+                            qt_dthres=-1, qt_psize=-1, qt_unique=True):
+    if len(matches) == 0:
+        return np.empty([0, 2], dtype=np.int32)
+
+    if qt_psize > 0 and qt_dthres > 0:
+        # Compute keypoints jointly with quantization
+        if name0 not in all_kp_data:
+            all_kp_data[name0] = {'kps':[], 'kp_means':{}}
+        if name1 not in all_kp_data:
+            all_kp_data[name1] = {'kps':[], 'kp_means':{}}
+
+        id1s = quantize_keypoints(matches[:, 0:2], all_kp_data[name0],
+                                  psize=qt_psize, dthres=qt_dthres)
+        id2s = quantize_keypoints(matches[:, 2:4], all_kp_data[name1],
+                                  psize=qt_psize, dthres=qt_dthres)
+        match_ids = np.dstack([id1s, id2s]).squeeze() # N, 2
+
+        # Remove n-to-1 matches after quantization
+        if qt_unique and len(match_ids) > 1:
+            uids = get_unique_matches_ids(match_ids, scores)
+            match_ids = match_ids[uids]
+            uids = get_unique_matches_ids(match_ids, scores)
+            match_ids = match_ids[uids]
+    else:
+        # Compute keypoints without quantization
+        if name0 not in all_kp_data:
+            all_kp_data[name0] = {'kps':[], 'kpids':{}}
+        if name1 not in all_kp_data:
+            all_kp_data[name1] = {'kps':[], 'kpids':{}}
+
+        id1s = compute_keypoints(matches[:, 0:2], all_kp_data[name0])
+        id2s = compute_keypoints(matches[:, 2:4], all_kp_data[name1])
+        match_ids = np.dstack([id1s, id2s]).squeeze()
+
+    return match_ids
 
