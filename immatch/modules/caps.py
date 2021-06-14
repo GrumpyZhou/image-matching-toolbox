@@ -21,7 +21,7 @@ class CAPS(FeatureDetection, Matching):
         if 'detector' not in args:
             args.detector = 'SuperPoint'
         if args.detector.lower() == 'sift':
-            self.detector = cv2.xfeatures2d.SIFT_create()
+            self.detector = cv2.SIFT_create()
             self.is_sift = True            
             self.name = f'CAPS_SIFT'            
         else:
