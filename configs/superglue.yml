@@ -16,3 +16,31 @@ inloc:
     pairs: 'pairs-query-netvlad40-temporal.txt' 
     rthres: 48
     skip_matches: 20
+aachen:
+    <<: *default
+    sinkhorn_iterations: 50
+    match_threshold: 0.0
+    max_keypoints: 4096
+    nms_radius: 3
+    imsize: 1024
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    qt_dthres: 0
+    qt_psize: 0
+    qt_unique: False
+    ransac_thres: [12]
+    sc_thres: 0.2
+    covis_cluster: False
+aachen_v1.1:
+    <<: *default
+    sinkhorn_iterations: 50
+    match_threshold: 0.0
+    max_keypoints: 4096
+    nms_radius: 3
+    imsize: 1024
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    qt_dthres: 0
+    qt_psize: 0
+    qt_unique: False
+    ransac_thres: [12]
+    sc_thres: 0.2
+    covis_cluster: False

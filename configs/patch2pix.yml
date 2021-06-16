@@ -11,4 +11,23 @@ inloc:
     pairs: 'pairs-query-netvlad40-temporal.txt' 
     rthres: 48
     skip_matches: 20
-    
+aachen:
+    <<: *default
+    match_threshold: 0.0 # Save all matches
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad30.txt']
+    qt_dthres: 4
+    qt_psize: 48
+    qt_unique: True
+    ransac_thres: [12]
+    sc_thres: 0.25 # Filtering during quantization
+    covis_cluster: True
+aachen_v1.1:
+    <<: *default
+    match_threshold: 0.0 # Save all matches
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    qt_dthres: 4
+    qt_psize: 48
+    qt_unique: True
+    ransac_thres: [20]
+    sc_thres: 0.25 # Filtering during quantization
+    covis_cluster: True

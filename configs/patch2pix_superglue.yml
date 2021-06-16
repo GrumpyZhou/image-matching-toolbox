@@ -20,3 +20,29 @@ inloc:
         <<: *coarse_default
         match_threshold: 0.1
         imsize: 1600
+aachen:
+    <<: *default
+    match_threshold: 0.0 # Save all matches
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    qt_dthres: 4
+    qt_psize: 48
+    qt_unique: True
+    ransac_thres: [20]
+    sc_thres: 0.25 # Filtering during quantization
+    covis_cluster: False
+    coarse:
+        <<: *coarse_default
+        match_threshold: 0.1
+aachen_v1.1:
+    <<: *default
+    match_threshold: 0.0 # Save all matches
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    qt_dthres: 4
+    qt_psize: 48
+    qt_unique: True
+    ransac_thres: [20]
+    sc_thres: 0.25 # Filtering during quantization
+    covis_cluster: True
+    coarse:
+        <<: *coarse_default
+        match_threshold: 0.1
