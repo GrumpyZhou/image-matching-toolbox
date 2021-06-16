@@ -29,7 +29,7 @@ Currently **supported evaluations** :
 	- InLoc
 	- Aachen (original + v1.1)
 
-**TODOs **:  
+**TODOs**:  
 - Localize on RobotCar 
 - Add LoFTR method
 
