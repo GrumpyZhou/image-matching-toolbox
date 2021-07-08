@@ -16,14 +16,15 @@ With this reprository, one can **reproduce** the tables reported in our  paper a
 
 ## Supported Methods & Evaluations 
 **Keypoint-based Matching:**
-- Local Feature:
+ - Local Feature:
 [CAPS](https://arxiv.org/abs/2004.13324), [D2Net](https://arxiv.org/abs/1905.03561),  [R2D2](https://arxiv.org/abs/1906.06195), [SuperPoint](https://arxiv.org/abs/1712.07629)
-- Matcher: [SuperGlue](https://arxiv.org/abs/1911.11763)
+ - Matcher: [SuperGlue](https://arxiv.org/abs/1911.11763)
 
 **Keypoint/Detection-free Matching:**
-	- Correspondence Network:  [NCNet](https://arxiv.org/abs/1810.10510),  [SparseNCNet](https://arxiv.org/pdf/2004.10566.pdf),
-	- Detection free: [LoFTR](https://zju3dv.github.io/loftr/)
-	- Local Refinement: [Patch2Pix](https://arxiv.org/abs/2012.01909)
+
+ - Correspondence Network:  [NCNet](https://arxiv.org/abs/1810.10510),  [SparseNCNet](https://arxiv.org/pdf/2004.10566.pdf),
+ -  Detection free: [LoFTR](https://zju3dv.github.io/loftr/)
+- Local Refinement: [Patch2Pix](https://arxiv.org/abs/2012.01909)
 
 **Supported Evaluations** :
 - Image feature matching on HPatches
@@ -50,7 +51,7 @@ The repository is structured as follows:
 To use a specific method to perform the matching task, you simply need to do:
 -  **Initialize a matcher using its config file.**  See examples of config yaml files under [configs](configs/) folder, eg., [patch2pix.yml](configs/patch2pix.yml).  Each config file contains multiple sections, each section corresponds to one setting. Here, we use the setting (*tagged by 'example'*) for testing on example image pairs.
 - **Perform matching**
-```
+```python
 import immatch
 import yaml
 from immatch.utils import plot_matches

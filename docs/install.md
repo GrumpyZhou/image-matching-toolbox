@@ -1,6 +1,6 @@
 ##  Installation
 To use our repository, first run:
-```
+```bash
 git clone git@github.com:GrumpyZhou/image-matching-toolbox.git
 
 # Install submodules non-recursively
@@ -8,7 +8,7 @@ git submodule update --init
 ```
 ### Setup Running Environment
 The code has been tested on Ubuntu 18.04 with Python 3.7 + Pytorch 1.7.0  + CUDA 10.2.  We recommend to use *Anaconda* to manage packages and reproduce the paper results. Run the following lines to automatically setup a ready environment for our code.
-```
+```bash
 conda env create -f environment.yml
 conda activte immatch
 
@@ -23,7 +23,7 @@ The **immatch** conda env allows to run all supported methods expect for SparseN
 
 ### Download Pretrained Models
 The following command will download the pretained models and place them to the correct places.
-```
+```bash
 cd pretrained/
 bash download.sh
 ```

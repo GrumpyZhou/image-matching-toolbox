@@ -31,14 +31,14 @@ The following example commands are supposed to be executed under **the repositor
 Available tasks are image feature matching and homography estimation. One can specify to run on either or both at one time by setting  `--task `  with one of ['matching' , 'homography', 'both']. 
 
 For example, the following command evaluates **SuperPoint** and **NCNet** on **both** tasks using their settings defined under **configs/**:
-```
+```python
 python -m immatch.eval_hpatches --gpu 0 \
     --config  'superpoint' 'ncnet' \
     --task 'both' --save_npy \
     --root_dir . 
 ```
 The following command evaluates **Patch2Pix** on under 3 matching thresholds:
-```
+```python
 python -m immatch.eval_hpatches --gpu 0 \
     --config 'patch2pix' --match_thres 0.25 0.5 0.9  \
     --task 'both' --save_npy \
@@ -55,24 +55,27 @@ To use another method, simply replace `--config 'patch2pix'` with the name of it
 **Notice**, one needs to prepare datasets following the previous section before running the following evaluations.
 
 #### InLoc
-```
+```python
 python -m immatch.eval_inloc --gpu 0\
 	--config 'patch2pix' 
 ```
 #### Aachen Day and Night
-```
+```python
 # Original version
 python -m immatch.eval_aachen --gpu 0 \
 	--config 'patch2pix_superglue' \
-	--colmap $COLMAP_PATH$  \
+	--colmap $COLMAP_PATH  \
 	--benchmark_name 'aachen'
 
 # Version 1.1
 python -m immatch.eval_aachen --gpu 0 \
 	--config 'patch2pix' \
-	--colmap $COLMAP_PATH$  \
+	--colmap $COLMAP_PATH  \
 	--benchmark_name 'aachen_v1.1'
 ```
 
 ###  RobotCar Season
 **Coming later**
+
+
+###  RobotCar Season (v1 + v2) TODOs
