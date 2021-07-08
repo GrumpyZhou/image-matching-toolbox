@@ -8,6 +8,10 @@ default: &default
     min_scale: 0.3
     max_scale: 1 
     min_size: 0
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
 hpatch:
     <<: *default
     min_size: 0

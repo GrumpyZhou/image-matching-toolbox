@@ -4,6 +4,10 @@ default: &default
     ksize: 2
     imsize: 1024
     match_threshold: 0.25
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
 hpatch:
     <<: *default
 inloc:

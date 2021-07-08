@@ -2,6 +2,10 @@ default: &default
     class: 'SuperPoint'
     keypoint_threshold: 0.005
     nms_radius: 4    
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
 hpatch:
     <<: *default
     max_keypoints: -1

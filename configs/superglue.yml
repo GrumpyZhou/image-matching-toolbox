@@ -4,6 +4,10 @@ default: &default
     sinkhorn_iterations: 20
     nms_radius: 4
     match_threshold: 0.2
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
 hpatch:
     <<: *default
     max_keypoints: 1024

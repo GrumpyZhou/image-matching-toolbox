@@ -3,6 +3,10 @@ default: &default
     ckpt: 'pretrained/d2net/d2_tf.pth'
     use_relu: True
     multiscale: False
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
 hpatch:
     <<: *default
     match_threshold: 0.0
