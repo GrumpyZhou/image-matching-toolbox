@@ -1,7 +1,8 @@
 # Manually added ignores
 outputs/
 data/
-
+pretrained/
+!pretrained/download.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
