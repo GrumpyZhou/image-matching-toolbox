@@ -1,0 +1,12 @@
+default: &default
+    class: 'LoFTR'
+    ckpt: 'pretrained/loftr/outdoor_ds.ckpt'
+    match_threshold: 0.2
+    imsize: -1
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
+hpatch:        
+    <<: *default
+    imsize: 1024

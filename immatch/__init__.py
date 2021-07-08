@@ -4,6 +4,7 @@ from .modules.superglue import SuperGlue
 from .modules.d2net import D2Net
 from .modules.r2d2 import R2D2
 from .modules.patch2pix import Patch2Pix, NCNet, Patch2PixRefined
+from .modules.loftr import LoFTR  # Cause warnings
 
 try:
     import MinkowskiEngine

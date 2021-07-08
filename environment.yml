@@ -20,4 +20,8 @@ dependencies:
       - tqdm
       - pyyaml
       - psutil
+      - einops
+      - kornia
+      - yacs
+      - gdown
   - pillow=6.0.0=py37he7afcd5_0 # To reproduce patch2pix cvpr21 results only

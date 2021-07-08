@@ -2,7 +2,7 @@
 
 # CAPS:
 mkdir caps
-wget --no-check-certificate 'https://docs.google.com/uc?export=download&id=1UVjtuhTDmlvvVuUlEq_M5oJVImQl6z1f' -O caps/caps-pretrained.pth
+gdown --id 1UVjtuhTDmlvvVuUlEq_M5oJVImQl6z1f -O caps/caps-pretrained.pth
 
 # D2Net
 mkdir d2net
@@ -21,3 +21,8 @@ ln -s ../third_party/patch2pix/pretrained patch2pix
 cd patch2pix
 bash download.sh
 cd ..
+
+# LoFTR
+mkdir loftr
+gdown --id 1M-VD35-qdB5Iw-AtbDBCKC7hPolFW9UY -O loftr/outdoor_ds.ckpt
+gdown --id 1w1Qhea3WLRMS81Vod_k5rxS_GNRgIi-O -O loftr/indoor_ds.ckpt

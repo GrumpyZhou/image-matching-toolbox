@@ -20,3 +20,6 @@
 [submodule "third_party/patch2pix"]
 	path = third_party/patch2pix
 	url = git@github.com:GrumpyZhou/patch2pix.git
+[submodule "third_party/loftr"]
+	path = third_party/loftr
+	url = git@github.com:zju3dv/LoFTR.git
