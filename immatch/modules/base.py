@@ -60,11 +60,7 @@ class Matching(metaclass=ABCMeta):
         Return:
             match_ids: the indices of the matched descriptors.
         """
-        if type(desc1) == torch.Tensor:
-            match_ids = mutual_nn_matching_torch(desc1, desc2, threshold)
-        else:
-            match_ids = mutual_nn_matching(desc1, desc2, threshold)
-        return match_ids
+        return mutual_nn_matching(desc1, desc2, threshold)
             
     @abstractmethod
     def match_pairs(self, im1_path, im2_path, **kwargs):

@@ -37,9 +37,7 @@ class SuperPoint(FeatureDetection, Matching):
         kpts2 = kpts2.cpu().data.numpy()
         
         # NN Match
-        match_ids, scores = self.mutual_nn_match(desc1.cpu().data.numpy(), 
-                                                 desc2.cpu().data.numpy(), 
-                                                 threshold=self.match_threshold)
+        match_ids, scores = self.mutual_nn_match(desc1, desc2, threshold=self.match_threshold)
         p1s = kpts1[match_ids[:, 0], :2]
         p2s = kpts2[match_ids[:, 1], :2]
         matches = np.concatenate([p1s, p2s], axis=1)

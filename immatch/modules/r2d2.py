@@ -43,11 +43,8 @@ class R2D2(FeatureDetection, Matching):
                                                min_scale = args.min_scale, 
                                                max_scale = args.max_scale,
                                                min_size  = args.min_size, 
-                                               max_size  = max_size, 
+                                               max_size  = max_size,
                                                verbose = False)        
-        xys = xys.cpu().numpy()
-        desc = desc.cpu().numpy()
-        scores = scores.cpu().numpy()
         idxs = scores.argsort()[-args.top_k or None:]
         kpts = xys[idxs]
         desc = desc[idxs]
