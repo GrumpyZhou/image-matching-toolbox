@@ -1,7 +1,9 @@
 import torch
-from .base import *
+import numpy as np
+
 from third_party.superglue.models.superpoint import SuperPoint as SP
 from third_party.superglue.models.utils import read_image
+from .base import FeatureDetection, Matching
 
 class SuperPoint(FeatureDetection, Matching):
     def __init__(self, args=None):   

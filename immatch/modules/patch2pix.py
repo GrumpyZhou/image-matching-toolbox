@@ -5,7 +5,7 @@ import sys
 patch2pix_path = Path(__file__).parent / '../../third_party/patch2pix'
 sys.path.append(str(patch2pix_path))
 
-from .base import *
+from .base import Matching
 from third_party.patch2pix.utils.eval.model_helper import load_model, estimate_matches
 import immatch
 from immatch.utils.data_io import load_im_tensor

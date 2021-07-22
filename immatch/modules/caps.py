@@ -2,10 +2,11 @@ from argparse import Namespace
 import torch
 import numpy as np
 import cv2
-from .base import *
+
 from third_party.caps.CAPS.network import CAPSNet
-from .superpoint import SuperPoint
 from immatch.utils.data_io import load_im_tensor
+from .base import FeatureDetection, Matching
+from .superpoint import SuperPoint
 
 class CAPS(FeatureDetection, Matching):
     def __init__(self, args):
@@ -22,8 +23,8 @@ class CAPS(FeatureDetection, Matching):
             args.detector = 'SuperPoint'
         if args.detector.lower() == 'sift':
             self.detector = cv2.SIFT_create()
-            self.is_sift = True            
-            self.name = f'CAPS_SIFT'            
+            self.is_sift = True
+            self.name = f'CAPS_SIFT'
         else:
             self.detector = SuperPoint(args.__dict__)
             self.is_sift = False        

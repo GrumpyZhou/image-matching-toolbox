@@ -1,10 +1,11 @@
 import torch
 from argparse import Namespace
 import numpy as np
-from .base import *
+
 from third_party.superglue.models.superglue import SuperGlue as SG
-from .superpoint import SuperPoint
 from third_party.superglue.models.utils import read_image
+from .superpoint import SuperPoint
+from .base import Matching
 
 class SuperGlue(Matching):
     def __init__(self, args):

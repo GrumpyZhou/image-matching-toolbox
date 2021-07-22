@@ -1,5 +1,6 @@
 from argparse import Namespace
 import torch
+import numpy as np
 import sys
 from pathlib import Path
 r2d2_path = Path(__file__).parent / '../../third_party/r2d2'
@@ -9,7 +10,7 @@ from third_party.r2d2.extract import NonMaxSuppression, extract_multiscale
 from third_party.r2d2.tools.dataloader import norm_RGB
 from third_party.r2d2.nets.patchnet import *
 from PIL import Image
-from .base import *
+from .base import FeatureDetection, Matching
 
 class R2D2(FeatureDetection, Matching):
     def __init__(self, args=None):   

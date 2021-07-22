@@ -1,5 +1,6 @@
 from argparse import Namespace
 import torch
+import numpy as np
 import sys
 from pathlib import Path
 d2net_path = Path(__file__).parent / '../../third_party/d2net'
@@ -9,7 +10,7 @@ from third_party.d2net.lib.model_test import D2Net as D2N
 from third_party.d2net.lib.utils import preprocess_image
 from third_party.d2net.lib.pyramid import process_multiscale
 from immatch.utils.data_io import read_im
-from .base import *
+from .base import FeatureDetection, Matching
 
 class D2Net(FeatureDetection, Matching):
     def __init__(self, args=None):   

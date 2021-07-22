@@ -2,9 +2,11 @@ import argparse
 from argparse import Namespace
 import os
 import logging
-from third_party.hloc.hloc.localize_inloc import localize_with_matcher
 import yaml
+
+from third_party.hloc.hloc.localize_inloc import localize_with_matcher
 import immatch
+
 
 def eval_inloc(config_name, prefix=None):
     # Initialize Model

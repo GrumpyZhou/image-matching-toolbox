@@ -2,8 +2,9 @@ from argparse import Namespace
 import torch
 import numpy as np
 import cv2
+
 from third_party.loftr.src.loftr import LoFTR as LoFTR_, default_cfg
-from .base import *
+from .base import Matching
 from ..utils.data_io import read_im_gray_divisible
 
 class LoFTR(Matching):

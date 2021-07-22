@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import torch
-from .nn_matching import *
+from .nn_matching import mutual_nn_matching
 
 class FeatureDetection(metaclass=ABCMeta):
     '''An abstract class for local feature detection and description methods'''

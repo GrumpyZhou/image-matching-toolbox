@@ -2,6 +2,7 @@ from argparse import Namespace
 import torch
 from pathlib import Path
 import sys
+import numpy as np
 sparsencnet_path = Path(__file__).parent / '../../third_party/sparsencnet'
 sys.path.append(str(sparsencnet_path))
 
@@ -9,7 +10,7 @@ from third_party.sparsencnet.lib.model import ImMatchNet
 from third_party.sparsencnet.lib.normalization import imreadth, resize, normalize
 from third_party.sparsencnet.lib.sparse import get_matches_both_dirs, unique
 from third_party.sparsencnet.lib.relocalize import relocalize, relocalize_soft, eval_model_reloc
-from .base import *
+from .base import Matching
 
 def load_im(im_path, scale_factor, imsize=None):
     im = imreadth(im_path)
