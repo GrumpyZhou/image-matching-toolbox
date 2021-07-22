@@ -6,7 +6,7 @@ channels:
 dependencies:
   - cudatoolkit=10.2
   - python=3.7
-  - pytorch
+  - pytorch==1.7.0
   - torchvision
   - jupyter
   - scipy
@@ -24,4 +24,4 @@ dependencies:
       - kornia
       - yacs
       - gdown
-  - pillow=6.0.0=py37he7afcd5_0 # To reproduce patch2pix cvpr21 results only
+      - pillow
