@@ -57,8 +57,8 @@ class R2D2(FeatureDetection, Matching):
         
         # NN Match
         match_ids, scores = self.mutual_nn_match(desc1, desc2, threshold=self.args.match_threshold)
-        p1s = kpts1[match_ids[:, 0], :2]
-        p2s = kpts2[match_ids[:, 1], :2]
+        p1s = kpts1[match_ids[:, 0], :2].cpu().numpy()
+        p2s = kpts2[match_ids[:, 1], :2].cpu().numpy()
         matches = np.concatenate([p1s, p2s], axis=1)
         return matches, kpts1, kpts2, scores 
        
