@@ -14,7 +14,7 @@ ln -s ../third_party/r2d2/models  r2d2
 
 # SparseNCNet
 mkdir sparsencnet
-wget https://www.di.ens.fr/willow/research/sparse-ncnet/models/sparsencnet_k10.pth.tar  -O sparsencet/sparsencnet_k10.pth.tar 
+wget https://www.di.ens.fr/willow/research/sparse-ncnet/models/sparsencnet_k10.pth.tar  -O sparsencnet/sparsencnet_k10.pth.tar 
 
 # Patch2Pix Symbolic links
 ln -s ../third_party/patch2pix/pretrained patch2pix
