@@ -3,7 +3,16 @@ from setuptools import setup, find_packages
 setup(
     name="immatch",
     version='0.1.0',
-    py_modules=find_packages(),
+    install_requires=[
+        'transforms3d',
+        'tqdm',
+        'pyyaml',
+        'einops',
+        'kornia',
+        'yacs',
+        'pillow',
+    ],
+    packages=find_packages(),
     author='Qunjie Zhou',
     python_requires='>=3.7',
     classifiers=[

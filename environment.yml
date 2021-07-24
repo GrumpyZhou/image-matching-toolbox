@@ -11,17 +11,5 @@ dependencies:
   - jupyter
   - scipy
   - matplotlib
-  - pip
   - opencv==4.5.2
-  - pip:
-      - transforms3d
-      - pydegensac
-      - h5py
-      - tqdm
-      - pyyaml
-      - psutil
-      - einops
-      - kornia
-      - yacs
-      - gdown
-      - pillow
+  - pip
