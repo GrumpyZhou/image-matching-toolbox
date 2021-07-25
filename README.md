@@ -2,17 +2,12 @@
 In this repository, we provide **easy interfaces** for several exisiting SotA methods to match image feature correspondences between image pairs.
 We provide **scripts to evaluate** their predicted correspondences on common benchmarks for the tasks of image matching, homography estimation and visual localization.
 
-### Notice
-- This repository is expected to be actively maintained  (at least before I graduate🤣🤣)  and **gradually** (slowly) grow for new features of interest.
-- Suggestions regarding how to improve this repo, such as adding new **SotA** image matching methods or new benchmark evaluations, are welcome 👏.
-
-### Regarding Patch2Pix
-With this reprository, one can **reproduce** the tables reported in our  paper accepted at CVPR2021: Patch2Pix: Epipolar-Guided Pixel-Level Correspondences[[pdf]](https://arxiv.org/abs/2012.01909).  Check [our patch2pix repository](https://github.com/GrumpyZhou/patch2pix) for its training code.
-
-###  Disclaimer 
--  All of the supported methods and evaluations are **not implemented from scratch**  by us.  Instead, we modularize their original code to define unified interfaces.
-- If you are using the results of a method, **remember to cite the corresponding paper**.
-- All credits of the implemetation of those methods belong to their authors .
+## TODOs & Updates
+- [x] Add LoFTR method (2021-7-8)
+- [x] Add simple match visualization (2021-7-8)
+- [x] Use ***immatch*** as a python lib under develop mode. Check [install.md](docs/install.md) for details. (2021-7-22)
+- [x] Add SIFT method (opencv version) (2021-7-25)
+- [ ] Localize on RobotCar 
 
 ## Supported Methods & Evaluations 
 **Keypoint-based Matching:**
@@ -74,10 +69,14 @@ plot_matches(im1, im2, matches, radius=2, lines=True)
 
 #### 👉 Try out the code using [example notebook ](notebooks/visualize_matches_on_example_pairs.ipynb).
 
+## Notice
+- This repository is expected to be actively maintained  (at least before I graduate🤣🤣)  and **gradually** (slowly) grow for new features of interest.
+- Suggestions regarding how to improve this repo, such as adding new **SotA** image matching methods or new benchmark evaluations, are welcome 👏.
 
-## TODOs & Updates
-- [x] Add LoFTR method (2021-7-8)
-- [x] Add simple match visualization (2021-7-8)
-- [x] Use ***immatch*** as a python lib under develop mode. Check [install.md](docs/install.md) for details. (2021-7-22)
-- [x] Add SIFT method (opencv version) (2021-7-25)
-- [ ] Localize on RobotCar 
+### Regarding Patch2Pix
+With this reprository, one can **reproduce** the tables reported in our  paper accepted at CVPR2021: Patch2Pix: Epipolar-Guided Pixel-Level Correspondences[[pdf]](https://arxiv.org/abs/2012.01909).  Check [our patch2pix repository](https://github.com/GrumpyZhou/patch2pix) for its training code.
+
+###  Disclaimer 
+-  All of the supported methods and evaluations are **not implemented from scratch**  by us.  Instead, we modularize their original code to define unified interfaces.
+- If you are using the results of a method, **remember to cite the corresponding paper**.
+- All credits of the implemetation of those methods belong to their authors .
