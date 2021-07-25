@@ -76,8 +76,8 @@ plot_matches(im1, im2, matches, radius=2, lines=True)
 
 
 ## TODOs & Updates
-```
 - [x] Add LoFTR method (2021-7-8)
 - [x] Add simple match visualization (2021-7-8)
+- [x] Use ***immatch*** as a python lib under develop mode. Check [install.md](docs/install.md) for details. (2021-7-22)
+- [x] Add SIFT method (opencv version) (2021-7-25)
 - [ ] Localize on RobotCar 
-```
