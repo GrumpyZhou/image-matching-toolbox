@@ -7,6 +7,7 @@ from third_party.caps.CAPS.network import CAPSNet
 from immatch.utils.data_io import load_im_tensor
 from .base import FeatureDetection, Matching
 from .superpoint import SuperPoint
+from .sift import SIFT
 
 class CAPS(FeatureDetection, Matching):
     def __init__(self, args):
@@ -19,28 +20,29 @@ class CAPS(FeatureDetection, Matching):
         self.load_model(args.ckpt)
         
         # Initialize detector
-        if 'detector' not in args:
-            args.detector = 'SuperPoint'
         if args.detector.lower() == 'sift':
-            self.detector = cv2.SIFT_create()
-            self.is_sift = True
+            self.detector = SIFT(args)
             self.name = f'CAPS_SIFT'
         else:
-            self.detector = SuperPoint(args.__dict__)
-            self.is_sift = False        
+            self.detector = SuperPoint(vars(args))
             rad = self.detector.model.config['nms_radius']
             self.name = f'CAPS_SuperPoint_r{rad}'
         print(f'Initialize {self.name}')
+
+    def load_im(self, im_path):
+        return load_im_tensor(
+            im_path, self.device, imsize=self.imsize, with_gray=True,
+            raw_gray=('SIFT' in self.name)
+        )
         
     def load_model(self, ckpt):
         print("Reloading from {}".format(ckpt))
         ckpt_dict = torch.load(ckpt)
-        self.model.load_state_dict(ckpt_dict['state_dict'])        
+        self.model.load_state_dict(ckpt_dict['state_dict'])
 
     def extract_features(self, im, gray):
         kpts = self.detector.detect(gray)
-        if self.is_sift:
-            kpts = np.array([[kp.pt[0], kp.pt[1]] for kp in kpts])
+        if isinstance(kpts, np.ndarray):
             kpts = torch.from_numpy(kpts).float().to(self.device)
         desc = self.describe(im, kpts)
         return kpts, desc
@@ -49,11 +51,10 @@ class CAPS(FeatureDetection, Matching):
         kpts = kpts.unsqueeze(0)
         feat_c, feat_f = self.model.extract_features(im, kpts)
         desc = torch.cat((feat_c, feat_f), -1).squeeze(0)
-        return desc   
+        return desc
     
     def load_and_extract(self, im_path):
-        im, gray, scale = load_im_tensor(im_path, self.device, imsize=self.imsize, 
-                                         with_gray=True, raw_gray=self.is_sift)
+        im, gray, scale = self.load_im(im_path)
         kpts, desc = self.extract_features(im, gray)
         kpts = kpts * torch.tensor(scale).to(kpts) # N, 2
         return kpts, desc
@@ -72,10 +73,8 @@ class CAPS(FeatureDetection, Matching):
         return matches, kpts1, kpts2, scores
     
     def match_pairs(self, im1_path, im2_path):
-        im1, gray1, sc1 = load_im_tensor(im1_path, self.device, imsize=self.imsize, 
-                                         with_gray=True, raw_gray=self.is_sift)
-        im2, gray2, sc2 = load_im_tensor(im2_path, self.device, imsize=self.imsize, 
-                                         with_gray=True, raw_gray=self.is_sift)
+        im1, gray1, sc1 = self.load_im(im1_path)
+        im2, gray2, sc2 = self.load_im(im2_path)
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(im1, gray1, im2, gray2)
         matches = upscale * matches

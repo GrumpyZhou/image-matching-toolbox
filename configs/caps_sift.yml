@@ -9,6 +9,7 @@ default: &default
     window_size: 0.125    
     use_nn: 1 
     detector: 'SIFT' 
+    npts: 1024
 hpatch:
     <<: *default
     match_threshold: 0.0
@@ -17,6 +18,7 @@ inloc:
     <<: *default
     match_threshold: 0.75
     imsize: 1600
+    npts: 4096
     pairs: 'pairs-query-netvlad40-temporal.txt'
     rthres: 48
     skip_matches: 20
