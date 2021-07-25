@@ -31,6 +31,10 @@ def read_im(im_path, imsize=None):
     im = im.resize((wt, ht), Image.BICUBIC)
     return im, scale
 
+def read_im_gray(im_path, imsize=None):
+    im, scale = read_im(im_path, imsize)
+    return im.convert('L'), scale
+
 def load_gray_scale_tensor(im_path, device, imsize=None):
     im_rgb, scale = read_im(im_path, imsize)
     gray = np.array(im_rgb.convert('L'))
