@@ -1,0 +1,7 @@
+default: &default
+    class: 'SIFT'
+    npts: 1024
+    match_threshold: 0.0
+    imsize: -1
+hpatch:
+    <<: *default
