@@ -21,14 +21,14 @@ def load_pairs(args):
         return None
     
     # Load pairs
-    logging.info(f'Pair list: {args.pairs}')    
+    print(f'Pair list: {args.pairs}')
     db_pairs = []
     query_pairs = []
     with open(args.db_pairs_path) as f:
         db_pairs += f.readlines()
     with open(args.query_pairs_path) as f:
         query_pairs += f.readlines()    
-    logging.info(f'Loaded pairs db:{len(db_pairs)} query:{len(query_pairs)}')
+    print(f'Loaded pairs db:{len(db_pairs)} query:{len(query_pairs)}')
     pair_list = db_pairs + query_pairs
     return pair_list
 
@@ -226,7 +226,7 @@ def compute_keypoints(pts, kp_data):
         pt_ids.append(kid)
     return pt_ids
 
-def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file):
+def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file, debug=False):
     # Pairwise matching
     num_matches = []
     match_times = []
@@ -255,6 +255,10 @@ def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file):
             N = len(matches)
             num_matches.append(N)
 
+            # Add print for easy debugging
+            if debug:
+                print(f'{pair} matches: {N}')
+
             # Save matches
             grp = fmatch.create_group(key)
             grp.create_dataset('matches', data=matches)
@@ -264,11 +268,11 @@ def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file):
         print(f'Finished matched pairs: {len(fmatch)} num_matches:{np.mean(num_matches):.2f} '
               f'match_time/pair:{mean_time:.2f}s time:{total_time:.2f}s.')
 
-def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir):
+def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir, debug=False):
     # Construct pairs and pair keys
     pairs = []
     pair_keys = []
-    for pair_line in pair_list:
+    for pair_line in tqdm(pair_list, smoothing=.1):
         name0, name1 = pair_line.split()
         key = names_to_pair(name0, name1)
         key_inv = names_to_pair(name1, name0)
@@ -280,7 +284,7 @@ def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir):
         pairs.append(pair)
 
     match_file = output_dir/'matches_raw.h5'
-    match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file)
+    match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file, debug=debug)
 
 def process_matches_and_keypoints_exporth5(pair_list, output_dir, result_dir,    
                                            sc_thres=0.25, qt_dthres=4, qt_psize=48, 
