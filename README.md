@@ -7,7 +7,11 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 - [x] Add simple match visualization (2021-7-8)
 - [x] Use ***immatch*** as a python lib under develop mode. Check [install.md](docs/install.md) for details. (2021-7-22)
 - [x] Add SIFT method (opencv version) (2021-7-25)
-- [ ] Localize on RobotCar 
+- [x] Add script to eval on RobotCar using HLoc (2021-7-31)
+- [ ] Add support to eval on [Image Matching Challenge](https://www.cs.ubc.ca/research/image-matching-challenge/current/data)
+- [ ] Add scripts to eval on [SimLoc](https://github.com/simlocmatch/simlocmatch-benchmark) challenge.
+
+***Comments from QJ***: Currently I am quite busy with my study & work. So it will take some time before I release the next two TODOs.
 
 ## Supported Methods & Evaluations 
 **Keypoint-based Matching:**
@@ -27,6 +31,7 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 - Visual localization benchmarks: 
 	- InLoc
 	- Aachen (original + v1.1)
+	- RobotCar Seasons (v1 + v2) 
 
 ## Repository Overview
 The repository is structured as follows:
