@@ -21,7 +21,7 @@ def eval_inloc(config_name, prefix=None):
 
     # Data setup
     dataset_dir = 'data/datasets/InLoc'
-    retrieval_pairs = os.path.join('third_party/hloc/pairs/inloc', args['pairs'])
+    retrieval_pairs = os.path.join('data/pairs/inloc', args['pairs'])
 
     # Output dir
     skip_matches = args['skip_matches']
@@ -36,6 +36,7 @@ def eval_inloc(config_name, prefix=None):
     odir = os.path.join('outputs/inloc', model.name, exp_name)
     method_tag = f'{model.name}_{exp_name}'        
     print('>>>res:', method_tag)
+
     # Localize InLoc queries
     localize_with_matcher(matcher, dataset_dir, retrieval_pairs, 
                           odir, method_tag,

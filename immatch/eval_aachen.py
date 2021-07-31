@@ -71,7 +71,7 @@ if __name__ == '__main__':
     parser.add_argument('--colmap', type=str, required=True)
     parser.add_argument('--skip_match', action='store_true')    
     parser.add_argument('--dataset_dir', type=str, default='data/datasets/AachenDayNight')
-    parser.add_argument('--pair_dir', type=str, default='third_party/hloc/pairs')
+    parser.add_argument('--pair_dir', type=str, default='data/pairs')
     parser.add_argument(
         '--benchmark_name', type=str, choices=['aachen', 'aachen_v1.1'], default='aachen'
     )
