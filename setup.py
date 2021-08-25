@@ -11,6 +11,7 @@ setup(
         'kornia',
         'yacs',
         'pillow',
+        'h5py',
     ],
     packages=find_packages(),
     author='Qunjie Zhou',
