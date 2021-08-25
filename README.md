@@ -36,7 +36,7 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 ## Repository Overview
 The repository is structured as follows:
  - **configs/**: Each method has its own yaml (.yml) file to configure its testing parameters. 
- - **data/**: All datasets should be placed under this folder following our instructions described in **Data Preparation**.
+ - **data/**: All datasets should be placed under this folder following our instructions described in **[Data Preparation](docs/evaluation.md#data-preparation)**.
  - **immatch/**: It contains implementations of method wrappers  and evaluation interfaces.
  - **outputs/**: All evaluation results are supposed to be saved here. One folder per benchmark.
  - **pretrained/**: It contains the pretrained models of the supported methods. 
@@ -57,7 +57,7 @@ import yaml
 from immatch.utils import plot_matches
 
 # Initialize model
-with open('configs/patch2pix.yml, 'r') as f:
+with open('configs/patch2pix.yml', 'r') as f:
     args = yaml.load(f, Loader=yaml.FullLoader)['example']
 model = immatch.__dict__[args['class']](args)
 matcher = lambda im1, im2: model.match_pairs(im1, im2)
