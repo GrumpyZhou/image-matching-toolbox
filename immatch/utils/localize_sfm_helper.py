@@ -272,14 +272,16 @@ def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir, debug=False):
     # Construct pairs and pair keys
     pairs = []
     pair_keys = []
+    pair_keys_set = set()
     for pair_line in tqdm(pair_list, smoothing=.1):
         name0, name1 = pair_line.split()
         key = names_to_pair(name0, name1)
         key_inv = names_to_pair(name1, name0)
-        if key_inv in pair_keys:
+        if key_inv in pair_keys_set:
             continue
 
         pair_keys.append(key)
+        pair_keys_set.add(key)
         pair = (str(im_dir / name0), str(im_dir / name1))
         pairs.append(pair)
 
