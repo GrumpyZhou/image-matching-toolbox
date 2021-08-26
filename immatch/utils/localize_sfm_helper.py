@@ -236,7 +236,7 @@ def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file, debug=
         matched = list(fmatch.keys())
         print(f'\nLoad match file, existing matches {len(matched)}')
         print(f'Start matching, total {len(pairs)} pairs...')
-        for pair, key in tqdm(zip(pairs, pair_keys), smoothing=.1):
+        for pair, key in tqdm(zip(pairs, pair_keys), total=len(pairs), smoothing=.1):
             im1_path, im2_path = pair
             if key in matched:
                 num_matches.append(len(fmatch[key]['matches']))
@@ -272,14 +272,16 @@ def match_pairs_exporth5(pair_list, matcher, im_dir, output_dir, debug=False):
     # Construct pairs and pair keys
     pairs = []
     pair_keys = []
+    pair_keys_set = set()
     for pair_line in tqdm(pair_list, smoothing=.1):
         name0, name1 = pair_line.split()
         key = names_to_pair(name0, name1)
         key_inv = names_to_pair(name1, name0)
-        if key_inv in pair_keys:
+        if key_inv in pair_keys_set:
             continue
 
         pair_keys.append(key)
+        pair_keys_set.add(key)
         pair = (str(im_dir / name0), str(im_dir / name1))
         pairs.append(pair)
 
