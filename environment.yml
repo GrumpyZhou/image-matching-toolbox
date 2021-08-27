@@ -12,4 +12,6 @@ dependencies:
   - scipy
   - matplotlib
   - opencv==4.5.2
-  - pip
+  - pip:
+    - kornia_moons
+    - kornia
