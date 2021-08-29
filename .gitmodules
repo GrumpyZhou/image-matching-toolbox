@@ -10,6 +10,7 @@
 [submodule "third_party/r2d2"]
 	path = third_party/r2d2
 	url = https://github.com/naver/r2d2
+	ignore = untracked
 [submodule "third_party/sparse-ncnet"]
 	path = third_party/sparsencnet
 	url = git@github.com:ignacio-rocco/sparse-ncnet.git
