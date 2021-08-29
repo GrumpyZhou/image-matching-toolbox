@@ -9,6 +9,7 @@ setup(
         'pyyaml',
         'einops',
         'kornia',
+        'kornia_moons',
         'yacs',
         'pillow',
         'h5py',
