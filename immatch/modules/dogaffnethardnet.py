@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 import kornia as K
 import kornia.feature as KF
-from kornia_moons.feature import *
+from kornia_moons.feature import laf_from_opencv_SIFT_kpts
 from .base import FeatureDetection, Matching
 from ..utils.data_io import read_im_gray
 
@@ -75,6 +75,7 @@ class DogAffNetHardNet(FeatureDetection, Matching):
         
         # NN Match
         dists, match_ids = KF.match_smnn(torch.from_numpy(desc1), torch.from_numpy(desc2), self.match_threshold)
+        match_ids = match_ids.data.numpy()
         p1s = kpts1[match_ids[:, 0], :2]
         p2s = kpts2[match_ids[:, 1], :2]
         matches = np.concatenate([p1s, p2s], axis=1)
