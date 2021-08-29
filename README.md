@@ -8,6 +8,7 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 - [x] Use ***immatch*** as a python lib under develop mode. Check [install.md](docs/install.md) for details. (2021-7-22)
 - [x] Add SIFT method (opencv version) (2021-7-25)
 - [x] Add script to eval on RobotCar using HLoc (2021-7-31)
+- [x] Add Dog-AffNet-Hardnet (Contributed by Dmytro Mishkin 👏, 2021-8-29)
 - [ ] Add support to eval on [Image Matching Challenge](https://www.cs.ubc.ca/research/image-matching-challenge/current/data)
 - [ ] Add scripts to eval on [SimLoc](https://github.com/simlocmatch/simlocmatch-benchmark) challenge.
 
@@ -16,14 +17,13 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 ## Supported Methods & Evaluations 
 **Keypoint-based Matching:**
  - Local Feature:
-[CAPS](https://arxiv.org/abs/2004.13324), [D2Net](https://arxiv.org/abs/1905.03561),  [R2D2](https://arxiv.org/abs/1906.06195), [SuperPoint](https://arxiv.org/abs/1712.07629)
+[CAPS](https://arxiv.org/abs/2004.13324), [D2Net](https://arxiv.org/abs/1905.03561),  [R2D2](https://arxiv.org/abs/1906.06195), [SuperPoint](https://arxiv.org/abs/1712.07629), [Dog-AffNet-HardNet](https://arxiv.org/abs/1711.06704)
  - Matcher: [SuperGlue](https://arxiv.org/abs/1911.11763)
 
 **Keypoint/Detection-free Matching:**
-
  - Correspondence Network:  [NCNet](https://arxiv.org/abs/1810.10510),  [SparseNCNet](https://arxiv.org/pdf/2004.10566.pdf),
- -  Detection free: [LoFTR](https://zju3dv.github.io/loftr/)
-- Local Refinement: [Patch2Pix](https://arxiv.org/abs/2012.01909)
+ - Detection free: [LoFTR](https://zju3dv.github.io/loftr/)
+ - Local Refinement: [Patch2Pix](https://arxiv.org/abs/2012.01909)
 
 **Supported Evaluations** :
 - Image feature matching on HPatches
