@@ -5,3 +5,23 @@ default: &default
     imsize: -1
 hpatch:
     <<: *default
+inloc:
+    <<: *default
+    match_threshold: 0.0
+    npts: 4096
+    imsize: 1600
+    pairs: 'pairs-query-netvlad40-temporal.txt'
+    rthres: 48
+    skip_matches: 20
+aachen:
+    <<: *default
+    match_threshold: 0.0 # Save all matches
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    npts: 4096
+    imsize: 1024
+    qt_dthres: 0
+    qt_psize: 0
+    qt_unique: False
+    ransac_thres: [12, 20, 25]
+    sc_thres: 0.5 # Filtering during quantization
+    covis_cluster: True
