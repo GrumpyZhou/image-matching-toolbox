@@ -1,0 +1,10 @@
+default: &default
+    class: 'DogAffNetHardNet'
+    npts: 1024
+    match_threshold: 0.95
+    imsize: -1
+    device: 'cpu'
+example:
+    <<: *default
+hpatch:
+    <<: *default
