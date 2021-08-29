@@ -147,6 +147,9 @@ def get_grouped_ids(array):
     return res
 
 def get_unique_matches_ids(match_ids, scores):
+    if len(match_ids.shape) == 1:
+        return [0]
+
     k1s = match_ids[:, 0]
     k2s = match_ids[:, 1]
     isets1 = get_grouped_ids(k1s)
