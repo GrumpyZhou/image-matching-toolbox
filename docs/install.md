@@ -44,7 +44,15 @@ pip install git+https://github.com/mihaidusmanu/pycolmap
 ```
 
 ### 4. Update immatch environment when needed
-Incase more packages are needed for new features, one can update your created immatch environment using the new [environment.yml](../environment.yml) :
+Incase more packages are needed for new features, one can update your created immatch environment:
+#### Option 1: add new libs into [setup.py](../setup.py) (Recommended & Faster)
+```bash
+# Update immatch toolbox
+cd image-matching-toolbox/
+python setup.py develop
+```
+
+#### Option 2: add new libs into [environment.yml](../environment.yml)
 ```
 conda activate immatch
 conda env update --file environment.yml --prune
