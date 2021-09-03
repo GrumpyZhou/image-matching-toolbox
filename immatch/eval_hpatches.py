@@ -1,15 +1,14 @@
 import argparse
 from argparse import Namespace
 import os
-import yaml
 
 import immatch
-import immatch.utils.hpatches_helper as helper
 from immatch.utils.data_io import lprint
-        
+import immatch.utils.hpatches_helper as helper
+from immatch.utils.model_helper import parse_model_config
+
 def eval_hpatches(root_dir, config_list, task='both', 
                   match_thres=None,save_npy=False,  print_out=False):
-    
     # Init paths
     data_root = os.path.join(root_dir, 'data/datasets/hpatches-sequences-release')
     cache_dir = os.path.join(root_dir, 'outputs/hpatches/cache')
@@ -22,16 +21,9 @@ def eval_hpatches(root_dir, config_list, task='both',
     
     # Iterate over methods
     for config_name in config_list:
-        config_file = f'{root_dir}/configs/{config_name}.yml'
-        with open(config_file, 'r') as f:
-            args = yaml.load(f, Loader=yaml.FullLoader)['hpatch']
-            if 'ckpt' in args:
-                args['ckpt'] = os.path.join(root_dir, args['ckpt'])
-                if 'coarse' in args and 'ckpt' in args['coarse']:
-                    args['coarse']['ckpt'] = os.path.join(
-                        root_dir, args['coarse']['ckpt']
-                    )
-            class_name = args['class']
+        # Load model
+        args = parse_model_config(config_name, 'hpatch', root_dir)
+        class_name = args['class']
         
         # One log file per method
         log_file = os.path.join(result_dir, f'{class_name}.txt')        

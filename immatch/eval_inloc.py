@@ -1,57 +1,45 @@
 import argparse
 from argparse import Namespace
 import os
-import logging
-import yaml
 
 from third_party.hloc.hloc.localize_inloc import localize_with_matcher
-import immatch
+from immatch.utils.model_helper import init_model
 
-
-def eval_inloc(config_name, prefix=None):
-    # Initialize Model
-    config_file = f'configs/{config_name}.yml'
-    with open(config_file, 'r') as f:
-        args = yaml.load(f, Loader=yaml.FullLoader)['inloc']
-        class_name = args['class']
-        print(f'Method:{class_name} Args: {args}')    
-    model = immatch.__dict__[class_name](args)
-    print(model)
+def eval_inloc(args):
+    model, model_conf = init_model(args.config, args.benchmark_name)
     matcher = lambda im1, im2: model.match_pairs(im1, im2)
+    args = Namespace(**vars(args), **model_conf)
+    print(">>>>", args)
 
-    # Data setup
-    dataset_dir = 'data/datasets/InLoc'
-    retrieval_pairs = os.path.join('data/pairs/inloc', args['pairs'])
-
-    # Output dir
-    skip_matches = args['skip_matches']
-    imsize = args['imsize']
-    rthres = args['rthres']
-    mthres = args['match_threshold']
-
+    # Setup output dir
+    rthres = args.rthres
+    mthres = args.match_threshold
+    skip_matches = args.skip_matches
+    retrieval_pairs = os.path.join(args.pair_dir, args.benchmark_name, args.pairs)
     pair_tag = retrieval_pairs.split('query-')[-1].replace('.txt', '')
-    exp_name = f'{pair_tag}_sk{skip_matches}im{imsize}rth{rthres}mth{mthres}'
-    if prefix:
-        exp_name = f'{exp_name}.{prefix}'
-    odir = os.path.join('outputs/inloc', model.name, exp_name)
+    exp_name = f'{pair_tag}_sk{skip_matches}im{args.imsize}rth{rthres}mth{mthres}'
+    if args.prefix:
+        exp_name = f'{exp_name}.{args.prefix}'
+    odir = os.path.join('outputs', args.benchmark_name, model.name, exp_name)
     method_tag = f'{model.name}_{exp_name}'        
-    print('>>>res:', method_tag)
+    print('>>>Method tag:', method_tag)
 
     # Localize InLoc queries
-    localize_with_matcher(matcher, dataset_dir, retrieval_pairs, 
-                          odir, method_tag,
-                          rthres=rthres, skip_matches=skip_matches)    
+    localize_with_matcher(
+        matcher, args.dataset_dir, retrieval_pairs, odir,
+        method_tag, rthres=rthres, skip_matches=skip_matches
+    )
     
 if __name__ == '__main__':    
     parser = argparse.ArgumentParser(description='Localize Inloc')
     parser.add_argument('--gpu', '-gpu', type=str, default=0)
     parser.add_argument('--config', type=str, default=None)    
     parser.add_argument('--prefix', type=str, default=None)
+    parser.add_argument('--dataset_dir', type=str, default='data/datasets/InLoc')
+    parser.add_argument('--pair_dir', type=str, default='data/pairs')
+    parser.add_argument('--benchmark_name', type=str, default='inloc')
 
     args = parser.parse_args()
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-    
-    
-    config_name = args.config
-    eval_inloc(config_name, args.prefix)
+    eval_inloc(args)
     

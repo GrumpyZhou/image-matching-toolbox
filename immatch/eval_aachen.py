@@ -2,9 +2,10 @@ import argparse
 from argparse import Namespace
 import os
 from pathlib import Path
-import yaml
-import immatch
+
+from immatch.utils.model_helper import init_model
 from immatch.utils.localize_sfm_helper import *
+
     
 def generate_covis_db_pairs(args):    
     from immatch.utils.colmap.data_parsing import covis_pairs_from_nvm, covis_pairs_from_reference_model
@@ -17,15 +18,8 @@ def generate_covis_db_pairs(args):
         covis_pairs_from_reference_model(model_dir, args.pair_dir, topk=args.topk)
     
 def eval_aachen(args):
-    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-    
-    # Initialize Model
-    config_file = f'configs/{args.config}.yml'
-    with open(config_file, 'r') as f:
-        model_conf = yaml.load(f, Loader=yaml.FullLoader)[args.benchmark_name]
-        class_name = model_conf['class']
-        print(f'Method:{class_name} Conf: {model_conf}')    
-    model = immatch.__dict__[class_name](model_conf)
+    # Initialize model
+    model, model_conf = init_model(args.config, args.benchmark_name)
     matcher = lambda im1, im2: model.match_pairs(im1, im2)
     
     # Merge args
@@ -81,6 +75,7 @@ if __name__ == '__main__':
     parser.add_argument('--topk', type=int, default=20)
     
     args = parser.parse_args()
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
     
     # Generate covis pairs
     if args.generate_covis_db_pairs:
