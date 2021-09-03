@@ -380,7 +380,7 @@ def matches_to_keypoint_ids(matches, scores, name0, name1, all_kp_data,
                                   psize=qt_psize, dthres=qt_dthres)
         id2s = quantize_keypoints(matches[:, 2:4], all_kp_data[name1],
                                   psize=qt_psize, dthres=qt_dthres)
-        match_ids = np.dstack([id1s, id2s]).squeeze() # N, 2
+        match_ids = np.dstack([id1s, id2s]).reshape(-1, 2) # N, 2
 
         # Remove n-to-1 matches after quantization
         if qt_unique and len(match_ids) > 1:
@@ -397,7 +397,7 @@ def matches_to_keypoint_ids(matches, scores, name0, name1, all_kp_data,
 
         id1s = compute_keypoints(matches[:, 0:2], all_kp_data[name0])
         id2s = compute_keypoints(matches[:, 2:4], all_kp_data[name1])
-        match_ids = np.dstack([id1s, id2s]).squeeze()
+        match_ids = np.dstack([id1s, id2s]).reshape(-1, 2)
 
     return match_ids
 
