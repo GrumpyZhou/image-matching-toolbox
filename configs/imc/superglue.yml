@@ -1,0 +1,45 @@
+# Model-dependent config
+default: &default
+    class: 'SuperGlue'
+    weights: 'outdoor'
+    sinkhorn_iterations: 50
+    nms_radius: 4
+    match_threshold: 0.0
+    max_keypoints: 4096
+    imsize: 1024
+    qt_dthres: 0
+    qt_psize: 0
+    qt_unique: False
+    
+# Dataset dependent config    
+phototourism:
+    <<: *default
+    gv_rthres: 0.5
+    # Is there anything else missing?
+
+pragueparks:
+    <<: *default
+    gv_rthres: 1.5
+    
+googleurban:
+    <<: *default
+    gv_rthres: 0.75
+    
+    
+default_json:
+    # Very rough idea ... probably not the good one
+    # Lots more missing here for sure !!
+    metadata_dict:
+        publish_anonymously : False,
+        authors: "Paul-Edouard Sarlin, Daniel DeTone and Tomasz Malisiewicz and Andrew Rabinovich",
+        contact_email: "paul.edouard.sarlin@gmail.com",
+        method_name: SuperPoint+SuperGlue,
+        # Probably need to parse from the config in the program to fill this
+        method_description: "TODO", 
+        link_to_website: "https://psarlin.com/superglue",
+        link_to_pdf: "https://arxiv.org/pdf/1911.11763.pdf",
+        
+    
+    
+   
+
