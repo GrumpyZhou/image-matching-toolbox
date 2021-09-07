@@ -2,7 +2,7 @@
 
 To use our code, first download this repository and initialize the submodules:
 ```bash
-git clone git@github.com:GrumpyZhou/image-matching-toolbox.git
+git clone https://github.com/GrumpyZhou/image-matching-toolbox.git
 
 # Install submodules non-recursively
 cd image-matching-toolbox/
