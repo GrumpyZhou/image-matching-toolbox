@@ -1,26 +1,26 @@
 [submodule "third_party/SuperGluePretrainedNetwork"]
 	path = third_party/superglue
-	url = git@github.com:magicleap/SuperGluePretrainedNetwork.git
+	url = https://github.com/magicleap/SuperGluePretrainedNetwork
 [submodule "third_party/caps"]
 	path = third_party/caps
-	url = git@github.com:GrumpyZhou/caps.git
+	url = https://github.com/GrumpyZhou/caps
 [submodule "third_party/d2-net"]
 	path = third_party/d2net
-	url = git@github.com:mihaidusmanu/d2-net.git
+	url = https://github.com/mihaidusmanu/d2-net
 [submodule "third_party/r2d2"]
 	path = third_party/r2d2
 	url = https://github.com/naver/r2d2
 	ignore = untracked
 [submodule "third_party/sparse-ncnet"]
 	path = third_party/sparsencnet
-	url = git@github.com:ignacio-rocco/sparse-ncnet.git
+	url = https://github.com/ignacio-rocco/sparse-ncnet
 [submodule "third_party/hloc"]
 	path = third_party/hloc
-	url = git@github.com:GrumpyZhou/Hierarchical-Localization.git
+	url = https://github.com/GrumpyZhou/Hierarchical-Localization
 	branch = extend_base_dev
 [submodule "third_party/patch2pix"]
 	path = third_party/patch2pix
-	url = git@github.com:GrumpyZhou/patch2pix.git
+	url = https://github.com/GrumpyZhou/patch2pix
 [submodule "third_party/loftr"]
 	path = third_party/loftr
-	url = git@github.com:zju3dv/LoFTR.git
+	url = https://github.com/zju3dv/LoFTR
