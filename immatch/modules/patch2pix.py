@@ -1,5 +1,6 @@
 from argparse import Namespace
 import torch
+import numpy as np
 from pathlib import Path
 import sys
 patch2pix_path = Path(__file__).parent / '../../third_party/patch2pix'
