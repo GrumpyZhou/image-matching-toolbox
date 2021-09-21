@@ -10,7 +10,7 @@ def parse_model_config(config, benchmark_name, root_dir='.'):
         # Update pretrained model path
         if 'ckpt' in model_conf and root_dir != '.':
             model_conf['ckpt'] = os.path.join(root_dir, model_conf['ckpt'])
-            if 'coarse' in model_conf and 'ckpt' in args['coarse']:
+            if 'coarse' in model_conf and 'ckpt' in model_conf['coarse']:
                 model_conf['coarse']['ckpt'] = os.path.join(
                     root_dir, model_conf['coarse']['ckpt']
                 )
