@@ -25,4 +25,4 @@ cd ..
 # LoFTR
 mkdir loftr
 gdown --id 1M-VD35-qdB5Iw-AtbDBCKC7hPolFW9UY -O loftr/outdoor_ds.ckpt
-gdown --id 1w1Qhea3WLRMS81Vod_k5rxS_GNRgIi-O -O loftr/indoor_ds.ckpt
+gdown --id 19s3QvcCWQ6g-N1PrYlDCg-2mOJZ3kkgS -O loftr/indoor_ds_new.ckpt
