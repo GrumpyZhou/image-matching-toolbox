@@ -13,6 +13,7 @@ setup(
         'yacs',
         'pillow',
         'h5py',
+        'gdown',
     ],
     packages=find_packages(),
     author='Qunjie Zhou',
