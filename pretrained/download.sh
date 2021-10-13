@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # CAPS:
-mkdir caps
+mkdir -p caps
 gdown --id 1UVjtuhTDmlvvVuUlEq_M5oJVImQl6z1f -O caps/caps-pretrained.pth
 
 # D2Net
-mkdir d2net
+mkdir -p d2net
 wget https://dsmn.ml/files/d2-net/d2_tf.pth -O d2net/d2_tf.pth
 wget https://dsmn.ml/files/d2-net/d2_tf_no_phototourism.pth -O d2net/d2_tf_no_phototourism.pth
 
@@ -13,7 +13,7 @@ wget https://dsmn.ml/files/d2-net/d2_tf_no_phototourism.pth -O d2net/d2_tf_no_ph
 ln -s ../third_party/r2d2/models  r2d2
 
 # SparseNCNet
-mkdir sparsencnet
+mkdir -p sparsencnet
 wget https://www.di.ens.fr/willow/research/sparse-ncnet/models/sparsencnet_k10.pth.tar  -O sparsencnet/sparsencnet_k10.pth.tar 
 
 # Patch2Pix Symbolic links
@@ -23,6 +23,6 @@ bash download.sh
 cd ..
 
 # LoFTR
-mkdir loftr
+mkdir -p loftr
 gdown --id 1M-VD35-qdB5Iw-AtbDBCKC7hPolFW9UY -O loftr/outdoor_ds.ckpt
 gdown --id 19s3QvcCWQ6g-N1PrYlDCg-2mOJZ3kkgS -O loftr/indoor_ds_new.ckpt
