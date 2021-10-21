@@ -20,7 +20,7 @@ Following the steps to setup the ready environment to run the matching toolbox. 
 ### 1. Create the immatch virtual environment
 ```bash
 conda env create -f environment.yml
-conda activte immatch
+conda activate immatch
 ```
 Notice, the **immatch** conda env allows to run all supported methods **expect for SparseNCNet**. In order to use it, please install its required dependencies according to its official [installation](https://github.com/ignacio-rocco/sparse-ncnet/blob/master/INSTALL.md),
 
