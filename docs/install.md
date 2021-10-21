@@ -42,6 +42,10 @@ This package is essential for evaluations on localization benchmarks.
 # Install  pycolmap 
 pip install git+https://github.com/mihaidusmanu/pycolmap
 ```
+In case https link doesnt work, you can install it directly for Python 3.7 and Python 3.8 via pypi:
+```bash
+pip install pycolmap
+```
 
 ### 4. Update immatch environment when needed
 Incase more packages are needed for new features, one can update your created immatch environment:
