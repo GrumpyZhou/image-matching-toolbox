@@ -20,7 +20,7 @@ Following the steps to setup the ready environment to run the matching toolbox. 
 ### 1. Create the immatch virtual environment
 ```bash
 conda env create -f environment.yml
-conda activte immatch
+conda activate immatch
 ```
 Notice, the **immatch** conda env allows to run all supported methods **expect for SparseNCNet**. In order to use it, please install its required dependencies according to its official [installation](https://github.com/ignacio-rocco/sparse-ncnet/blob/master/INSTALL.md),
 
@@ -41,6 +41,10 @@ This package is essential for evaluations on localization benchmarks.
 ```bash
 # Install  pycolmap 
 pip install git+https://github.com/mihaidusmanu/pycolmap
+```
+In case https link doesnt work, you can install it directly for Python 3.7 and Python 3.8 via pypi:
+```bash
+pip install pycolmap
 ```
 
 ### 4. Update immatch environment when needed
