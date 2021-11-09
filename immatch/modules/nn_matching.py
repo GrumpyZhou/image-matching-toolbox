@@ -2,10 +2,12 @@ import torch
 import numpy as np
 
 def mutual_nn_matching_torch(desc1, desc2, threshold=None):
+    if len(desc1) == 0 or len(desc2) == 0:
+        return torch.empty((0, 2), dtype=torch.int64), torch.empty((0, 2), dtype=torch.int64)
+
     device = desc1.device
     desc1 = desc1 / desc1.norm(dim=1, keepdim=True)
     desc2 = desc2 / desc2.norm(dim=1, keepdim=True)
-    #similarity = desc1 @ desc2.t()
     similarity = torch.einsum('id, jd->ij', desc1, desc2)
 
     
