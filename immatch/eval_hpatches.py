@@ -74,7 +74,8 @@ def eval_hpatches(
                 ransac_thres=ransac_thres,
                 lprint_=lprint_,
                 print_out=print_out,
-                save_npy=result_npy
+                save_npy=result_npy,
+                debug=debug,
             )
         log.close()
 

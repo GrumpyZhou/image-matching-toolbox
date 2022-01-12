@@ -193,6 +193,7 @@ def eval_hpatches(
                     corner_dist = np.nan
                     irat = 0
                     h_failed += 1
+                    inliers = []
                 else:
                     im = Image.open(im1_path)
                     w, h = im.size
