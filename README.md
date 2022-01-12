@@ -9,6 +9,7 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 - [x] Add SIFT method (opencv version) (2021-7-25)
 - [x] Add script to eval on RobotCar using HLoc (2021-7-31)
 - [x] Add Dog-AffNet-Hardnet (Contributed by Dmytro Mishkin 👏, 2021-8-29)
+- [x] Add AUC metric and opencv solver for Homography estimation on HPatches (#20, 2022-1-12)  
 - [ ] Add support to eval on [Image Matching Challenge](https://www.cs.ubc.ca/research/image-matching-challenge/current/data)
 - [ ] Add scripts to eval on [SimLoc](https://github.com/simlocmatch/simlocmatch-benchmark) challenge.
 
