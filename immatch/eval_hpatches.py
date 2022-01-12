@@ -7,12 +7,22 @@ from immatch.utils.data_io import lprint
 import immatch.utils.hpatches_helper as helper
 from immatch.utils.model_helper import parse_model_config
 
-def eval_hpatches(root_dir, config_list, task='both', 
-                  match_thres=None,save_npy=False,  print_out=False):
+def eval_hpatches(
+    root_dir,
+    config_list,
+    task='both',
+    h_solver='degensac',
+    ransac_thres=2,
+    match_thres=None,
+    odir='outputs/hpatches',
+    save_npy=False,
+    print_out=False,
+    debug=False,
+):
     # Init paths
     data_root = os.path.join(root_dir, 'data/datasets/hpatches-sequences-release')
-    cache_dir = os.path.join(root_dir, 'outputs/hpatches/cache')
-    result_dir = os.path.join(root_dir, 'outputs/hpatches/results', task)
+    cache_dir = os.path.join(root_dir, odir, 'cache')
+    result_dir = os.path.join(root_dir, odir, 'results', task)
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)    
     if not os.path.exists(result_dir):
@@ -54,47 +64,49 @@ def eval_hpatches(root_dir, config_list, task='both',
             
             lprint_(f'Matching thres: {thres}  Save to: {result_npy}')
             
-            # Eval on target tasks:
-            if task == 'homography':
-                helper.eval_hpatches_homography(                
-                    matcher, data_root, model.name, 
-                    lprint_=lprint_, print_out=print_out
-                ) 
-            elif task == 'matching':
-                helper.eval_hpatches_matching(
-                    matcher, data_root, model.name, 
-                    lprint_=lprint_, print_out=print_out, 
-                    save_npy=result_npy, 
-                )
-            else:                               
-                # Perform both tasks at once
-                helper.eval_hpatches(
-                    matcher, data_root, model.name, 
-                    lprint_=lprint_, print_out=print_out, 
-                    save_npy=result_npy
-                )
-    
+            # Eval on the specified task(s)
+            helper.eval_hpatches(
+                matcher,
+                data_root,
+                model.name,
+                task=task,
+                h_solver=h_solver,
+                ransac_thres=ransac_thres,
+                lprint_=lprint_,
+                print_out=print_out,
+                save_npy=result_npy
+            )
         log.close()
 
 if __name__ == '__main__':    
     parser = argparse.ArgumentParser(description='Benchmark HPatches')
     parser.add_argument('--gpu', '-gpu', type=str, default=0)
     parser.add_argument('--root_dir', type=str, default='.')  
+    parser.add_argument('--odir', type=str, default='outputs/hpatches')
     parser.add_argument('--config', type=str,  nargs='*', default=None)    
     parser.add_argument('--match_thres', type=float, nargs='*', default=None)
     parser.add_argument(
         '--task', type=str, default='homography', 
-        choices=['matching', 'homography', 'both']        
+        choices=['matching', 'homography', 'both']
     )
+    parser.add_argument(
+        '--h_solver', type=str, default='degensac',
+        choices=['degensac', 'cv']
+    )
+    parser.add_argument('--ransac_thres', type=float, default=2)
     parser.add_argument('--save_npy', action='store_true')
-    parser.add_argument('--print_out', action='store_true')    
+    parser.add_argument('--print_out', action='store_true')
     
 
     args = parser.parse_args()
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
     eval_hpatches(
-        args.root_dir, args.config, args.task,                   
-        match_thres=args.match_thres, save_npy=args.save_npy, 
+        args.root_dir, args.config, args.task,
+        h_solver=args.h_solver,
+        ransac_thres=args.ransac_thres,
+        match_thres=args.match_thres,
+        odir=args.odir,
+        save_npy=args.save_npy,
         print_out=args.print_out
     )
 
