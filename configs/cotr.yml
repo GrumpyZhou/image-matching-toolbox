@@ -1,0 +1,28 @@
+default: &default
+    class: 'COTR'
+    ckpt: 'pretrained/cotr/cotr_default.pth.tar'
+    backbone: 'resnet50'
+    hidden_dim: 256
+    dilation: False
+    dropout: 0.1
+    nheads: 8
+    layer: 'layer3'
+    backbone_layer_dims : {
+        'layer1': 256,    
+        'layer2': 512,                   
+        'layer3': 1024,                   
+        'layer4': 2048, 
+    }
+    enc_layers: 6
+    dec_layers: 6
+    position_embedding: 'lin_sine'
+    max_corrs: 100
+    match_threshold: 0.2
+    imsize: -1
+example:
+    <<: *default
+    match_threshold: 0.5
+    imsize: -1
+hpatch:        
+    <<: *default
+    imsize: 1024

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CAPS:
+# CAPS
 mkdir -p caps
 gdown --id 1UVjtuhTDmlvvVuUlEq_M5oJVImQl6z1f -O caps/caps-pretrained.pth
 
@@ -26,3 +26,12 @@ cd ..
 mkdir -p loftr
 gdown --id 1M-VD35-qdB5Iw-AtbDBCKC7hPolFW9UY -O loftr/outdoor_ds.ckpt
 gdown --id 19s3QvcCWQ6g-N1PrYlDCg-2mOJZ3kkgS -O loftr/indoor_ds_new.ckpt
+
+# COTR
+mkdir -p cotr
+cd cotr/
+wget https://www.cs.ubc.ca/research/kmyi_data/files/2021/cotr/default.zip
+unzip -j default.zip
+mv checkpoint.pth.tar  cotr_default.pth.tar
+rm default.zip
+cd ..
