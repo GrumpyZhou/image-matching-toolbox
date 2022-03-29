@@ -49,7 +49,7 @@ class LoFTR(Matching):
 
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(gray1, gray2)
-        matches = upscale * matches
-        kpts1 = sc1 * kpts1
-        kpts2 = sc2 * kpts2
-        return matches, kpts1, kpts2, scores
+        matches = matches
+        kpts1 = kpts1
+        kpts2 = kpts2
+        return matches, kpts1, kpts2, scores, upscale.squeeze(0)

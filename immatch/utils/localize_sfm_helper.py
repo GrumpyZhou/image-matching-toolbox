@@ -254,7 +254,7 @@ def match_pairs_with_keys_exporth5(matcher, pairs, pair_keys, match_file, debug=
                 continue
 
             matches = match_res[0]
-            scores = match_res[-1]
+            scores = match_res[3]
             N = len(matches)
             num_matches.append(N)
 

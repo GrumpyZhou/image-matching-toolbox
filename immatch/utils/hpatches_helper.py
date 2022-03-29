@@ -160,6 +160,12 @@ def eval_hpatches(
                 match_res = matcher(im1_path, im2_path)
                 match_time.append(time.time() - t0)
                 matches, p1s, p2s = match_res[0:3]
+                scale = match_res[4]
+                # Homographies from downscaled images to fullscale
+                H_scale_1 = scale_homography(scale[0], scale[1])
+                H_scale_2 = scale_homography(scale[2], scale[3])
+                # Groundtruth between downscaled images
+                H_gt = np.linalg.inv(H_scale_2) @ H_gt @ H_scale_1
             except:
                 p1s = p2s = matches = []
                 match_failed += 1
@@ -197,10 +203,11 @@ def eval_hpatches(
                 else:
                     im = Image.open(im1_path)
                     w, h = im.size
+                    w, h = w / scale[0], h / scale[1]
                     corners = np.array([[0, 0, 1],
-                                        [0, w - 1, 1],
-                                        [h - 1, 0, 1],
-                                        [h - 1, w - 1, 1]])
+                                        [0, h - 1, 1],
+                                        [w - 1, 0, 1],
+                                        [w - 1, h - 1, 1]])
                     real_warped_corners = np.dot(corners, np.transpose(H_gt))
                     real_warped_corners = real_warped_corners[:, :2] / real_warped_corners[:, 2:]
                     warped_corners = np.dot(corners, np.transpose(H_pred))
@@ -231,3 +238,8 @@ def eval_hpatches(
         lprint_('==== Homography Estimation ====')        
         lprint_(f'Hest solver={h_solver} est_failed={h_failed} ransac_thres={ransac_thres} inlier_rate={np.mean(inlier_ratio):.2f}')
         lprint_(eval_summary_homography(dists_sa, dists_si, dists_sv, thres))
+
+def scale_homography(sw, sh):
+    return np.array([[sw,  0, 0],
+                     [ 0, sh, 0],
+                     [ 0,  0, 1]])

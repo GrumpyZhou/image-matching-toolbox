@@ -10,10 +10,10 @@ def lprint(ms, log=None):
         log.write(ms+'\n')
         log.flush()
 
-def resize_im(wo, ho, imsize=None, dfactor=1):
+def resize_im(wo, ho, imsize=None, dfactor=1, value_to_scale=max):
     wt, ht = wo, ho
-    if imsize and max(wo, ho) > imsize and imsize > 0:
-        scale = imsize / max(wo, ho)
+    if imsize and value_to_scale(wo, ho) > imsize and imsize > 0:
+        scale = imsize / value_to_scale(wo, ho)
         ht, wt = int(round(ho * scale)), int(round(wo * scale))
 
     # Make sure new sizes are divisible by the given factor
@@ -42,9 +42,10 @@ def load_gray_scale_tensor(im_path, device, imsize=None, dfactor=1):
     return gray, scale
 
 def load_gray_scale_tensor_cv(im_path, device, imsize=None, dfactor=1):
+    # Used for LoFTR
     im = cv2.imread(im_path, cv2.IMREAD_GRAYSCALE)
     ho, wo = im.shape
-    wt, ht, scale = resize_im(wo, ho, imsize=imsize, dfactor=dfactor)
+    wt, ht, scale = resize_im(wo, ho, imsize=imsize, dfactor=dfactor, value_to_scale=min)
     im = cv2.resize(im, (wt, ht))
     im = transforms.functional.to_tensor(im).unsqueeze(0).to(device)
     return im, scale
