@@ -7,6 +7,7 @@ from .modules.patch2pix import Patch2Pix, NCNet, Patch2PixRefined
 from .modules.loftr import LoFTR  # Cause warnings
 from .modules.sift import SIFT
 from .modules.dogaffnethardnet import DogAffNetHardNet
+from .modules.cotr import COTR
 
 try:
     import MinkowskiEngine

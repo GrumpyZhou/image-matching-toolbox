@@ -17,12 +17,10 @@ default: &default
     dec_layers: 6
     position_embedding: 'lin_sine'
     max_corrs: 100
-    match_threshold: 0.2
+    match_threshold: 0.0
     imsize: -1
+    batch_size: 32
 example:
     <<: *default
-    match_threshold: 0.5
-    imsize: -1
 hpatch:        
     <<: *default
-    imsize: 1024
