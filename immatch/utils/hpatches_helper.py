@@ -198,9 +198,9 @@ def eval_hpatches(
                     im = Image.open(im1_path)
                     w, h = im.size
                     corners = np.array([[0, 0, 1],
-                                        [0, w - 1, 1],
-                                        [h - 1, 0, 1],
-                                        [h - 1, w - 1, 1]])
+                                        [0, h - 1, 1],
+                                        [w - 1, 0, 1],
+                                        [w - 1, h - 1, 1]])
                     real_warped_corners = np.dot(corners, np.transpose(H_gt))
                     real_warped_corners = real_warped_corners[:, :2] / real_warped_corners[:, 2:]
                     warped_corners = np.dot(corners, np.transpose(H_pred))
