@@ -81,11 +81,17 @@ def eval_summary_matching(results, thres=[1, 3, 5, 10], save_npy=None):
     summary += 'MMA@{} px:\na={}\ni={}\nv={}\n'.format(thres, aerr, ierr, verr)
     return summary
 
+def scale_homography(sw, sh):
+    return np.array([[sw,  0, 0],
+                     [ 0, sh, 0],
+                     [ 0,  0, 1]])
+
 def eval_hpatches(
     matcher,
     data_root,
     method='',
     task='both',
+    scale_H=False,
     h_solver='degensac',
     ransac_thres=2,
     thres=[1, 3, 5, 10],
@@ -121,7 +127,7 @@ def eval_hpatches(
     if task == 'both':
         task = 'matching+homography'
     seq_dirs = sorted(glob.glob('{}/*'.format(data_root)))
-    lprint_(f'\n>>>>Eval hpatches: task={task} method={method} rthres={ransac_thres} thres={thres} ')
+    lprint_(f'\n>>>>Eval hpatches: task={task} method={method} scale_H={scale_H} rthres={ransac_thres} thres={thres} ')
     
     # Matching
     if 'matching' in task:
@@ -153,19 +159,22 @@ def eval_hpatches(
         for im_idx in range(2, 7):
             im2_path = os.path.join(seq_dir, '{}.ppm'.format(im_idx))
             H_gt = np.loadtxt(os.path.join(seq_dir, 'H_1_{}'.format(im_idx)))
-            
+            scale = np.ones(4)
+
             # Predict matches
             try:
                 t0 = time.time()
                 match_res = matcher(im1_path, im2_path)
                 match_time.append(time.time() - t0)
                 matches, p1s, p2s = match_res[0:3]
-                scale = match_res[4]
-                # Homographies from downscaled images to fullscale
-                H_scale_1 = scale_homography(scale[0], scale[1])
-                H_scale_2 = scale_homography(scale[2], scale[3])
-                # Groundtruth between downscaled images
-                H_gt = np.linalg.inv(H_scale_2) @ H_gt @ H_scale_1
+                if scale_H:
+                    # scale = (wo / wt, ho / ht) for im1 & im2
+                    scale = match_res[4]
+
+                    # Scale gt homoragphies
+                    H_scale_im1 = scale_homography(scale[0], scale[1])
+                    H_scale_im2 = scale_homography(scale[2], scale[3])
+                    H_gt = np.linalg.inv(H_scale_im2) @ H_gt @ H_scale_im1
             except:
                 p1s = p2s = matches = []
                 match_failed += 1
@@ -191,7 +200,6 @@ def eval_hpatches(
                         H_pred, inliers = cv2.findHomography(matches[:, :2], matches[:, 2:4], cv2.RANSAC, ransac_thres)
                     else:
                         H_pred, inliers = pydegensac.findHomography(matches[:, :2], matches[:, 2:4], ransac_thres)
-                    #
                 except:
                     H_pred = None
 
@@ -238,8 +246,3 @@ def eval_hpatches(
         lprint_('==== Homography Estimation ====')        
         lprint_(f'Hest solver={h_solver} est_failed={h_failed} ransac_thres={ransac_thres} inlier_rate={np.mean(inlier_ratio):.2f}')
         lprint_(eval_summary_homography(dists_sa, dists_si, dists_sv, thres))
-
-def scale_homography(sw, sh):
-    return np.array([[sw,  0, 0],
-                     [ 0, sh, 0],
-                     [ 0,  0, 1]])

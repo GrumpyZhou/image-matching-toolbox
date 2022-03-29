@@ -70,6 +70,7 @@ def eval_hpatches(
                 data_root,
                 model.name,
                 task=task,
+                scale_H=getattr(model, 'no_match_upscale', False),
                 h_solver=h_solver,
                 ransac_thres=ransac_thres,
                 lprint_=lprint_,

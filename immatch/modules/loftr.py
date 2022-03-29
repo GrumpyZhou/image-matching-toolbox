@@ -15,7 +15,8 @@ class LoFTR(Matching):
 
         self.imsize = args.imsize        
         self.match_threshold = args.match_threshold
-        
+        self.no_match_upscale = args.no_match_upscale
+
         # Load model
         conf = dict(default_cfg)
         conf['match_coarse']['thr'] = self.match_threshold
@@ -27,6 +28,8 @@ class LoFTR(Matching):
         # Name the method
         self.ckpt_name = args.ckpt.split('/')[-1].split('.')[0]
         self.name = f'LoFTR_{self.ckpt_name}'        
+        if self.no_match_upscale:
+            self.name += '_noms'
         print(f'Initialize {self.name}')
         
     def load_im(self, im_path):
@@ -49,7 +52,12 @@ class LoFTR(Matching):
 
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(gray1, gray2)
-        matches = matches
-        kpts1 = kpts1
-        kpts2 = kpts2
-        return matches, kpts1, kpts2, scores, upscale.squeeze(0)
+
+        if self.no_match_upscale:
+            return matches, kpts1, kpts2, scores, upscale.squeeze(0)
+
+        # Upscale matches &  kpts
+        matches = upscale * matches
+        kpts1 = sc1 * kpts1
+        kpts2 = sc2 * kpts2
+        return matches, kpts1, kpts2, scores
