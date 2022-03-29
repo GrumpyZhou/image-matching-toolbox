@@ -9,4 +9,4 @@ example:
     imsize: -1
 hpatch:        
     <<: *default
-    imsize: 1024
+    imsize: 480
