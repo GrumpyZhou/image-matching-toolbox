@@ -59,7 +59,7 @@ def eval_aachen(args):
         
 if __name__ == '__main__':    
     parser = argparse.ArgumentParser(description='Localize Aachen Day-Night')
-    parser.add_argument('--gpu', '-gpu', type=str, default=0)
+    parser.add_argument('--gpu', '-gpu', type=str, default='0')
     parser.add_argument('--config', type=str, default=None)
     parser.add_argument('--prefix', type=str, default=None)    
     parser.add_argument('--colmap', type=str, required=True)
