@@ -17,6 +17,7 @@ class LoFTR(Matching):
         self.aspect_ratio = args.aspect_ratio
         self.match_threshold = args.match_threshold
         self.no_match_upscale = args.no_match_upscale
+        self.nbr_matches = args.nbr_matches
 
         # Load model
         conf = dict(default_cfg)
@@ -44,6 +45,12 @@ class LoFTR(Matching):
         kpts1 = batch['mkpts0_f'].cpu().numpy()
         kpts2 = batch['mkpts1_f'].cpu().numpy()
         scores = batch['mconf'].cpu().numpy()
+        if self.nbr_matches and self.nbr_matches > 0:
+            ids = np.argsort(scores)[-self.nbr_matches:]
+            kpts1 = kpts1[ids]
+            kpts2 = kpts2[ids]
+            scores = scores[ids]
+
         matches = np.concatenate([kpts1, kpts2], axis=1)
         return matches, kpts1, kpts2, scores
 

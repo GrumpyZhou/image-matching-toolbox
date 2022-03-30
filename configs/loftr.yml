@@ -5,6 +5,7 @@ default: &default
     imsize: -1
     aspect_ratio: -1
     no_match_upscale: False
+    nbr_matches: -1
 example:
     <<: *default
     match_threshold: 0.5
@@ -15,3 +16,4 @@ hpatch:
     imsize: 640
     aspect_ratio: 1.333333  # images will be 640x480 or 480x640
     no_match_upscale: True
+    nbr_matches: 1000
