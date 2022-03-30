@@ -3,6 +3,7 @@ default: &default
     ckpt: 'pretrained/loftr/outdoor_ds.ckpt'
     match_threshold: 0.2
     imsize: -1
+    aspect_ratio: -1
     no_match_upscale: False
 example:
     <<: *default
@@ -10,5 +11,6 @@ example:
     imsize: -1
 hpatch:        
     <<: *default
-    imsize: 480
+    imsize: 640
+    aspect_ratio: 1.333333  # images will be 640x480 or 480x640
     no_match_upscale: True
