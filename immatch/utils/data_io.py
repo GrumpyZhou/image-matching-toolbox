@@ -10,10 +10,19 @@ def lprint(ms, log=None):
         log.write(ms+'\n')
         log.flush()
 
-def resize_im(wo, ho, imsize=None, dfactor=1, value_to_scale=max):
+def resize_im(wo, ho, imsize=None, aspect_ratio=None, dfactor=1):
     wt, ht = wo, ho
-    if imsize and value_to_scale(wo, ho) > imsize and imsize > 0:
-        scale = imsize / value_to_scale(wo, ho)
+    if aspect_ratio and aspect_ratio > 0:
+        if not imsize or imsize < 0:
+            raise ValueError('imsize must be given when using fixed aspect_ratio')
+        max_wh = imsize
+        min_wh = round(imsize / aspect_ratio)
+        if wo < ho:
+            wt, ht = min_wh, max_wh
+        else:
+            wt, ht = max_wh, min_wh
+    elif imsize and max(wo, ho) > imsize and imsize > 0:
+        scale = imsize / max(wo, ho)
         ht, wt = int(round(ho * scale)), int(round(wo * scale))
 
     # Make sure new sizes are divisible by the given factor
@@ -41,11 +50,11 @@ def load_gray_scale_tensor(im_path, device, imsize=None, dfactor=1):
     gray = transforms.functional.to_tensor(gray).unsqueeze(0).to(device)
     return gray, scale
 
-def load_gray_scale_tensor_cv(im_path, device, imsize=None, dfactor=1):
+def load_gray_scale_tensor_cv(im_path, device, imsize=None, aspect_ratio=None, dfactor=1):
     # Used for LoFTR
     im = cv2.imread(im_path, cv2.IMREAD_GRAYSCALE)
     ho, wo = im.shape
-    wt, ht, scale = resize_im(wo, ho, imsize=imsize, dfactor=dfactor, value_to_scale=min)
+    wt, ht, scale = resize_im(wo, ho, imsize=imsize, aspect_ratio=aspect_ratio, dfactor=dfactor)
     im = cv2.resize(im, (wt, ht))
     im = transforms.functional.to_tensor(im).unsqueeze(0).to(device)
     return im, scale
