@@ -3,7 +3,7 @@ default: &default
     ckpt: 'pretrained/loftr/outdoor_ds.ckpt'
     match_threshold: 0.2
     imsize: -1
-    no_matches_upscale: False
+    no_match_upscale: False
 example:
     <<: *default
     match_threshold: 0.5
