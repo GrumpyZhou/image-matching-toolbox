@@ -35,10 +35,12 @@ data/
 	     |-- images/
 	     |-- queries/
 	|-- InLoc/
-	     |-- 3D-models/
+	     |-- dataset/
+	     	|-- alignments/
+		|-- cutouts/
 	     |-- query/
     |-- Robotcar/
-	     |-- dataset/
+	     |-- 3D-models/
 	     |-- images/
 	     |-- intrinsics/
 	     |-- queries/
