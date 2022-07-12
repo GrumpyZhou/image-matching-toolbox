@@ -26,5 +26,5 @@
 	url = https://github.com/zju3dv/LoFTR
 [submodule "third_party/cotr"]
 	path = third_party/cotr
-	url = git@github.com:ubc-vision/COTR.git
+	url = https://github.com/ubc-vision/COTR
 	branch = master
