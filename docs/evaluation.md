@@ -21,6 +21,9 @@ bash download.sh
 ```
 Otherwise, feel free to use your own database pairs and query pairs.
 
+### RobotCar Season Queries
+The above _download.sh_ also downloads the zip file containing RobotCar Season queries which was pre-extracted using [scripts from the original HLoc](https://github.com/cvg/Hierarchical-Localization/blob/robotcar/pipelines/RobotCar/robotcar_generate_query_list.py).
+You need to unzip it and place the folder under _data/RobotCar/queries_.
 
 Finally, the **data/** folder should contain look like:
 ```
