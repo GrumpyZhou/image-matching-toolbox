@@ -8,6 +8,7 @@ from .modules.loftr import LoFTR  # Cause warnings
 from .modules.sift import SIFT
 from .modules.dogaffnethardnet import DogAffNetHardNet
 from .modules.cotr import COTR
+from .modules.aspanformer import ASpanFormer
 
 try:
     import MinkowskiEngine

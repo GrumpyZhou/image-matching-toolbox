@@ -1,0 +1,35 @@
+default: &default
+    class: 'ASpanFormer'
+    ckpt: 'pretrained/aspanformer/outdoor.ckpt'
+    train_res: [832, 832]
+    match_threshold: 0.2
+    imsize: -1
+    no_match_upscale: False
+example:
+    <<: *default
+    match_threshold: 0.2
+    imsize: -1
+hpatch:        
+    <<: *default
+    imsize: 1024
+    no_match_upscale: True
+inloc:
+    <<: *default
+    match_threshold: 0.2
+    npts: 4096
+    imsize: 1024
+    pairs: 'pairs-query-netvlad40-temporal.txt'
+    rthres: 48
+    skip_matches: 20
+aachen:
+    <<: *default
+    match_threshold: 0.0 # Save all matches
+    pairs: ['pairs-db-covis20.txt', 'pairs-query-netvlad50.txt']
+    npts: 4096
+    imsize: 1024
+    qt_dthres: 4
+    qt_psize: 48
+    qt_unique: True
+    ransac_thres: [20]
+    sc_thres: 0.2 # Filtering during quantization
+    covis_cluster: True

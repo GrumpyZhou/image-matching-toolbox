@@ -41,11 +41,13 @@ def load_gray_scale_tensor(im_path, device, imsize=None, dfactor=1):
     gray = transforms.functional.to_tensor(gray).unsqueeze(0).to(device)
     return gray, scale
 
-def load_gray_scale_tensor_cv(im_path, device, imsize=None, dfactor=1):
+def load_gray_scale_tensor_cv(im_path, device, imsize=None, value_to_scale=min, dfactor=1):
     # Used for LoFTR
     im = cv2.imread(im_path, cv2.IMREAD_GRAYSCALE)
     ho, wo = im.shape
-    wt, ht, scale = resize_im(wo, ho, imsize=imsize, dfactor=dfactor, value_to_scale=min)
+    wt, ht, scale = resize_im(
+        wo, ho, imsize=imsize, dfactor=dfactor, value_to_scale=value_to_scale
+    )
     im = cv2.resize(im, (wt, ht))
     im = transforms.functional.to_tensor(im).unsqueeze(0).to(device)
     return im, scale

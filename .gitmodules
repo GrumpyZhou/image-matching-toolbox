@@ -28,3 +28,6 @@
 	path = third_party/cotr
 	url = https://github.com/ubc-vision/COTR
 	branch = master
+[submodule "third_party/aspanformer"]
+	path = third_party/aspanformer
+	url = https://github.com/apple/ml-aspanformer.git

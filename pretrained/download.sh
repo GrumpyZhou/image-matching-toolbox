@@ -35,3 +35,6 @@ unzip -j default.zip
 mv checkpoint.pth.tar  cotr_default.pth.tar
 rm default.zip
 cd ..
+
+# ASpanFormer Symbolic  links
+ln -s ../third_party/aspanformer/weights  aspanformer
