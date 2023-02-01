@@ -175,7 +175,8 @@ def eval_hpatches(
                     H_scale_im1 = scale_homography(scale[0], scale[1])
                     H_scale_im2 = scale_homography(scale[2], scale[3])
                     H_gt = np.linalg.inv(H_scale_im2) @ H_gt @ H_scale_im1
-            except:
+            except Exception as e:
+                print(e)
                 p1s = p2s = matches = []
                 match_failed += 1
             n_matches.append(len(matches))
