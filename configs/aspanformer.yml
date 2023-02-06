@@ -2,17 +2,28 @@ default: &default
     class: 'ASpanFormer'
     ckpt: 'pretrained/aspanformer/outdoor.ckpt'
     train_res: [832, 832]
+    test_res: [832, 832]
+    coarse_scale: 0.125
+    coarsest_level: [26, 26]
+    border_rm: 2
+    imsize: 832
+    online_resize: False
     match_threshold: 0.2
-    imsize: -1
     no_match_upscale: False
 example:
     <<: *default
-    match_threshold: 0.2
-    imsize: -1
-hpatch:        
+hpatch:
     <<: *default
-    imsize: 1024
     no_match_upscale: True
+megadepth:
+    <<: *default
+    coarsest_level: [36, 36]
+    test_res: [1152, 1152]
+scannet:
+    <<: *default
+    coarsest_level: [15, 20]
+    train_res: [480, 640]
+    border_rm: 0
 inloc:
     <<: *default
     match_threshold: 0.2
