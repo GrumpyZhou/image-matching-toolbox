@@ -4,6 +4,7 @@ default: &default
     match_threshold: 0.2
     imsize: -1
     no_match_upscale: False
+    eval_coarse: False
 example:
     <<: *default
     match_threshold: 0.5

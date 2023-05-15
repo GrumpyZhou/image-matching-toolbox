@@ -16,6 +16,7 @@ class LoFTR(Matching):
         self.imsize = args.imsize        
         self.match_threshold = args.match_threshold
         self.no_match_upscale = args.no_match_upscale
+        self.eval_coarse = args.eval_coarse
 
         # Load model
         conf = dict(default_cfg)
@@ -40,15 +41,20 @@ class LoFTR(Matching):
     def match_inputs_(self, gray1, gray2):
         batch = {'image0': gray1, 'image1': gray2}
         self.model(batch)
-        kpts1 = batch['mkpts0_f'].cpu().numpy()
-        kpts2 = batch['mkpts1_f'].cpu().numpy()
+
+        if self.eval_coarse:
+            kpts1 = batch['mkpts0_c'].cpu().numpy()
+            kpts2 = batch['mkpts1_c'].cpu().numpy()
+        else:
+            kpts1 = batch['mkpts0_f'].cpu().numpy()
+            kpts2 = batch['mkpts1_f'].cpu().numpy()
         scores = batch['mconf'].cpu().numpy()
         matches = np.concatenate([kpts1, kpts2], axis=1)
         return matches, kpts1, kpts2, scores
 
     def match_pairs(self, im1_path, im2_path):
-        gray1, sc1 = self.load_im(im1_path)
-        gray2, sc2 = self.load_im(im2_path)
+        gray1, sc1, _ = self.load_im(im1_path)
+        gray2, sc2, _ = self.load_im(im2_path)
 
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(gray1, gray2)
