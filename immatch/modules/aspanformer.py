@@ -25,6 +25,7 @@ class ASpanFormer(Matching):
         self.online_resize = args.online_resize
         self.im_padding = False
         self.coarse_scale = args.coarse_scale
+        self.eval_coarse = args.eval_coarse
 
         # Load model
         config = get_cfg_defaults()
@@ -64,7 +65,7 @@ class ASpanFormer(Matching):
         batch = {
             'image0': gray1, 'image1': gray2
         }
-        if mask1 is not None and self.coarse_scale:
+        if mask1 is not None and mask2 is not None and self.coarse_scale:
             [ts_mask_1, ts_mask_2] = F.interpolate(
                 torch.stack([mask1, mask2], dim=0)[None].float(),
                 scale_factor=self.coarse_scale,
@@ -77,8 +78,12 @@ class ASpanFormer(Matching):
         self.model(batch, online_resize=self.online_resize)
 
         # Output parsing
-        kpts1 = batch['mkpts0_f'].cpu().numpy()
-        kpts2 = batch['mkpts1_f'].cpu().numpy()
+        if self.eval_coarse:
+            kpts1 = batch['mkpts0_c'].cpu().numpy()
+            kpts2 = batch['mkpts1_c'].cpu().numpy()
+        else:
+            kpts1 = batch['mkpts0_f'].cpu().numpy()
+            kpts2 = batch['mkpts1_f'].cpu().numpy()
         scores = batch['mconf'].cpu().numpy()
         matches = np.concatenate([kpts1, kpts2], axis=1)
         return matches, kpts1, kpts2, scores
