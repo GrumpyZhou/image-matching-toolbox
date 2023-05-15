@@ -11,6 +11,7 @@ def eval_hpatches(
     root_dir,
     config_list,
     task='both',
+    benchmark='hpatch',
     h_solver='degensac',
     ransac_thres=2,
     match_thres=None,
@@ -32,7 +33,7 @@ def eval_hpatches(
     # Iterate over methods
     for config_name in config_list:
         # Load model
-        args = parse_model_config(config_name, 'hpatch', root_dir)
+        args = parse_model_config(config_name, benchmark, root_dir)
         class_name = args['class']
         
         # One log file per method

@@ -6,28 +6,12 @@ import pydegensac
 import cv2
 from tqdm import tqdm
 
-def cal_error_auc(errors, thresholds):
-    if len(errors) == 0:
-        return np.zeros(len(thresholds))
-    N = len(errors)
-    errors = np.append([0.], np.sort(errors))
-    recalls = np.arange(N + 1) / N
-    aucs = []
-    for thres in thresholds:
-        last_index = np.searchsorted(errors, thres)
-        rcs_ = np.append(recalls[:last_index], recalls[last_index-1])
-        errs_ = np.append(errors[:last_index], thres)
-        aucs.append(np.trapz(rcs_, x=errs_) / thres)
-    return np.array(aucs)
+from immatch.utils.metrics import (
+    cal_error_auc,
+    check_data_hist,
+    cal_reproj_dists_H
+)
 
-def cal_reproj_dists(p1s, p2s, homography):
-    '''Compute the reprojection errors using the GT homography'''
-
-    p1s_h = np.concatenate([p1s, np.ones([p1s.shape[0], 1])], axis=1)  # Homogenous
-    p2s_proj_h = np.transpose(np.dot(homography, np.transpose(p1s_h)))
-    p2s_proj = p2s_proj_h[:, :2] / p2s_proj_h[:, 2:]
-    dist = np.sqrt(np.sum((p2s - p2s_proj) ** 2, axis=1))
-    return dist
 
 def eval_summary_homography(dists_sa, dists_si, dists_sv, thres):
     correct_sa = np.mean(
@@ -149,6 +133,7 @@ def eval_hpatches(
     n_matches = []
     match_time = []
     start_time = time.time()
+    match_errs = []
     for seq_idx, seq_dir in tqdm(enumerate(seq_dirs[::-1]), total=len(seq_dirs), smoothing=.5):
         if debug and seq_idx > 10:
             break
@@ -188,7 +173,8 @@ def eval_hpatches(
                 if len(matches) == 0:
                     dist = np.array([float("inf")])
                 else:
-                    dist = cal_reproj_dists(matches[:, :2], matches[:, 2:], H_gt)
+                    dist = cal_reproj_dists_H(matches[:, :2], matches[:, 2:], H_gt)
+                match_errs.append(dist)
                 for thr in thres_range:
                     if sname[0] == 'i':
                         i_err[thr] += np.mean(dist <= thr)
@@ -197,8 +183,12 @@ def eval_hpatches(
 
             if 'homography' in task:
                 try:
-                    if 'cv' in h_solver:
+                    if h_solver == 'cv':
+                        # By default ransac
                         H_pred, inliers = cv2.findHomography(matches[:, :2], matches[:, 2:4], cv2.RANSAC, ransac_thres)
+                    elif h_solver == 'magsac':
+                        H_pred, inliers = cv2.findHomography(matches[:, :2], matches[:, 2:4], cv2.USAC_MAGSAC, ransac_thres)
+
                     else:
                         H_pred, inliers = pydegensac.findHomography(matches[:, :2], matches[:, 2:4], ransac_thres)
                 except:
@@ -247,3 +237,6 @@ def eval_hpatches(
         lprint_('==== Homography Estimation ====')        
         lprint_(f'Hest solver={h_solver} est_failed={h_failed} ransac_thres={ransac_thres} inlier_rate={np.mean(inlier_ratio):.2f}')
         lprint_(eval_summary_homography(dists_sa, dists_si, dists_sv, thres))
+
+    # Measure distributions
+    print(check_data_hist(match_errs, bins=[0, 1, 3, 5, 10, 50, 100, 1000], tag='Matching '))
