@@ -11,6 +11,8 @@ class SuperGlue(Matching):
     def __init__(self, args):
         super().__init__()        
         self.imsize = args['imsize']
+        self.no_match_upscale = args.get('no_match_upscale', False)
+
         self.model = SG(args).eval().to(self.device)
         self.detector = SuperPoint(args)
         rad = self.detector.model.config['nms_radius']
@@ -48,6 +50,11 @@ class SuperGlue(Matching):
         _, gray2, sc2 = read_image(im2_path, self.device, [self.imsize], 0, True)
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(gray1, gray2)
+
+        if self.no_match_upscale:
+            return matches, kpts1, kpts2, scores, upscale.squeeze(0)
+
+        # Upscale matches &  kpts
         matches = upscale * matches
         kpts1 = sc1 * kpts1
         kpts2 = sc2 * kpts2        
