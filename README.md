@@ -11,6 +11,8 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 - [x] Add Dog-AffNet-Hardnet (Contributed by Dmytro Mishkin 👏, 2021-8-29)
 - [x] Add AUC metric and opencv solver for Homography estimation on HPatches (#20, 2022-1-12)  
 - [x] Add COTR (A naive wrapper without tuning parameters, 2022-3-29) 
+- [x] Add Aspanformer (2023-6-2)
+- [x] Add Megadepth relative pose estimation following LoFTR & Aspanformer (2023-6-2)
 - [ ] Add support to eval on [Image Matching Challenge](https://www.cs.ubc.ca/research/image-matching-challenge/current/data)
 - [ ] Add scripts to eval on [SimLoc](https://github.com/simlocmatch/simlocmatch-benchmark) challenge.
 
@@ -24,7 +26,7 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 
 **Semi-dense Matching:**
  - Correspondence Network:  [NCNet](https://arxiv.org/abs/1810.10510),  [SparseNCNet](https://arxiv.org/pdf/2004.10566.pdf),
- - Transformer-based: [LoFTR](https://zju3dv.github.io/loftr/), [COTR](https://github.com/ubc-vision/COTR)
+ - Transformer-based: [Aspanformer](https://aspanformer.github.io/),[LoFTR](https://zju3dv.github.io/loftr/), [COTR](https://github.com/ubc-vision/COTR)
  - Local Refinement: [Patch2Pix](https://arxiv.org/abs/2012.01909)
 
 **Supported Evaluations** :
