@@ -17,6 +17,7 @@ setup(
         'tables',
         'vispy',
         'glfw',
+        'albumentations',
     ],
     packages=find_packages(),
     author='Qunjie Zhou',
