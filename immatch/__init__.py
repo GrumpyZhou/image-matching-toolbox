@@ -8,7 +8,12 @@ from .modules.loftr import LoFTR  # Cause warnings
 from .modules.sift import SIFT
 from .modules.dogaffnethardnet import DogAffNetHardNet
 from .modules.cotr import COTR
-from .modules.aspanformer import ASpanFormer
+
+try:
+    from .modules.aspanformer import ASpanFormer
+except ImportError as e:
+    print(f"Can not import ASpanFormer: {e}")
+    pass
 
 try:
     import MinkowskiEngine
@@ -22,5 +27,5 @@ try:
     from .modules.sparsencnet import SparseNCNet     
     use_sparsencnet = True
 except ImportError as e:
-    print('Can not import sparsencnet')
+    print(f"Can not import sparsencnet: {e}")
     pass    
