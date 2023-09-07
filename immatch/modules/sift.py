@@ -35,7 +35,7 @@ class SIFT(FeatureDetection, Matching):
     
     def load_and_detect(self, im_path):
         im, scale = self.load_im(im_path)
-        kpts, desc = self.detect(im)
+        kpts = self.detect(im)
         kpts = kpts * scale        
         return kpts
 
