@@ -1,8 +1,11 @@
 from collections import defaultdict
+import os
 import numpy as np
 from tqdm import tqdm
+import argparse
 from argparse import Namespace
 import cv2
+from pathlib import Path
 
 from immatch.utils.model_helper import init_model
 import immatch.utils.metrics as M
@@ -203,4 +206,26 @@ def eval_scannet_relapose(
         print_out=print_out,
         debug=debug,
     )
-    
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Benchmark Relative Pose')
+    parser.add_argument('--gpu', '-gpu', type=str, default='0')
+    parser.add_argument('--config', type=str, required=True)
+    parser.add_argument('--benchmark', type=str, required=True, choices=['scannet', 'megadepth'])
+    parser.add_argument('--root_dir', type=str, default='.')
+    parser.add_argument('--ransac_thres', type=float, default=0.5)
+    parser.add_argument('--print_out', action='store_true')
+    parser.add_argument('--debug', action='store_true')
+
+    args = parser.parse_args()
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+
+    eval(f"eval_{args.benchmark}_relapose")(
+        Path(args.root_dir),
+        args.config,
+        benchmark=args.benchmark,
+        ransac_thres=args.ransac_thres,
+        print_out=args.print_out,
+        debug=args.debug,
+    )
