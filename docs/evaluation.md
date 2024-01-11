@@ -11,6 +11,8 @@ All datasets should be placed under  **data/datasets**. Here, we provide brief d
 
 - **RobotCar Seasons**: Download the [RobotCar Seasons](https://data.ciirc.cvut.cz/public/projects/2020VisualLocalization/RobotCar-Seasons/) dataset contents and place them under a folder named **RobotCar/**. 
 
+ - **MegaDepth** and **ScanNet** for relative pose estimation: we followed [LoFTR](https://github.com/zju3dv/LoFTR?tab=readme-ov-file) to setup both datasets for testing, please refer to their repo for details.
+
 ### Prepare Image Pairs
 To evaluate on visual localization benchmarks, one needs to prepare image pairs that are required by HLoc pipeline in advance.
 For convenience, we cached the pairs that are extracted by [HLoc](https://github.com/cvg/Hierarchical-Localization) author Paul-Edouard Sarlin.
@@ -76,6 +78,17 @@ python -m immatch.eval_hpatches --gpu 0 \
     --task 'both' --save_npy \
     --root_dir .     
 ```
+### Relative Pose Estimation
+To reproduce [AspanFormer results](https://github.com/apple/ml-aspanformer/tree/main?tab=readme-ov-file#evaluation):
+```
+# MegaDepth
+
+python -m immatch.eval_relapose --config 'aspanformer' --benchmark 'megadepth'
+
+# ScanNet
+python -m immatch.eval_relapose --config 'aspanformer' --benchmark 'scannet'
+```
+
 
 ### Long-term Visual Localization
 We adopt the public implementation [Hierarchical Localization](https://github.com/cvg/Hierarchical-Localization) to evaluate matches on several long-term visual localization benchmarks, including:
