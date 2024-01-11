@@ -39,6 +39,30 @@ def compute_relapose_aspan(kpts0, kpts1, K0, K1, pix_thres=0.5, conf=0.99999):
 
     return ret
 
+def load_scannet_pairs_npz(intrinsic_path, npz_path, data_root):
+    # Load intrinsics
+    intrinsics = dict(np.load(intrinsic_path))
+
+    # Collect pairs
+    pairs = []
+    scene_info = dict(np.load(npz_path))
+    for scene_id, scene_sub, stem_name_1, stem_name_2 in tqdm(scene_info['name']):
+        scene_name = f'scene{scene_id:04d}_{scene_sub:02d}'
+
+        im1 = f"{scene_name}/color/{stem_name_1}.jpg"
+        im2 = f"{scene_name}/color/{stem_name_2}.jpg"
+        K1 = K2 = np.array(intrinsics[scene_name].copy(), dtype=np.float32).reshape(3, 3)
+
+        # Compute relative pose
+        T1 = np.linalg.inv(np.loadtxt(f"{data_root}/{scene_name}/pose/{stem_name_1}.txt", delimiter=' '))
+        T2 = np.linalg.inv(np.loadtxt(f"{data_root}/{scene_name}/pose/{stem_name_2}.txt", delimiter=' '))
+        T12 = np.matmul(T2, np.linalg.inv(T1))
+        pairs.append(Namespace(
+            im1=im1, im2=im2, K1=K1, K2=K2, t=T12[:3, 3], R=T12[:3, :3]
+        ))
+    print(f"Loaded {len(pairs)} pairs.")
+    return pairs
+
 def load_megadepth_pairs_npz(npz_root, npz_list):
     with open(npz_list, 'r') as f:
         npz_names = [name.split()[0] for name in f.readlines()]
@@ -67,12 +91,11 @@ def load_megadepth_pairs_npz(npz_root, npz_list):
     print(f"Loaded {len(pairs)} pairs.")
     return pairs
 
-def eval_megadepth_relapose(
+def eval_relapose(
     matcher,
     data_root,
-    npz_root,
-    npz_list,
-    method='',    
+    pairs,
+    method='',
     ransac_thres=0.5,
     thresholds=[1, 3, 5, 10, 20],
     print_out=False,
@@ -80,9 +103,6 @@ def eval_megadepth_relapose(
 ):
     statis = defaultdict(list)
     np.set_printoptions(precision=2)
-    
-    # Load pairs
-    pairs = load_megadepth_pairs_npz(npz_root, npz_list)    
 
     # Eval on pairs
     print(f">>> Start eval on Megadepth: method={method} rthres={ransac_thres} ... \n")
@@ -96,7 +116,8 @@ def eval_megadepth_relapose(
         R_gt = pair.R
         im1 = str(data_root / pair.im1)
         im2 = str(data_root / pair.im2)
-        matches, pts1, pts2, scores = matcher(im1, im2)
+        match_res = matcher(im1, im2)
+        matches, pts1, pts2 = match_res[0:3]
 
         # Compute pose errors
         ret = compute_relapose_aspan(
@@ -107,7 +128,7 @@ def eval_megadepth_relapose(
             statis['failed'].append(i)
             statis['R_errs'].append(np.inf)
             statis['t_errs'].append(np.inf)
-            statis['inliers'].append(np.array([]).astype(np.bool))
+            statis['inliers'].append(np.array([]).astype(np.bool_))
         else:
             R, t, inliers = ret
             R_err, t_err = M.cal_relapose_error(R, R_gt, t, t_gt)
@@ -121,8 +142,7 @@ def eval_megadepth_relapose(
     pose_auc = M.cal_relapose_auc(statis, thresholds=thresholds)
     return pose_auc
 
-
-def eval_megadepth(
+def eval_megadepth_relapose(
     root_dir,
     method,
     benchmark='megadepth',
@@ -130,22 +150,55 @@ def eval_megadepth(
     print_out=False,
     debug=False,
 ):
-    
+
     # Init paths
     npz_root = root_dir / 'third_party/aspanformer/assets/megadepth_test_1500_scene_info'
     npz_list = root_dir / 'third_party/aspanformer/assets/megadepth_test_1500_scene_info/megadepth_test_1500.txt'
     data_root = root_dir / 'data/datasets/MegaDepth_undistort'
+
+    # Load pairs
+    pairs = load_megadepth_pairs_npz(npz_root, npz_list)
         
     # Init model
     model, config = init_model(method, benchmark, root_dir=root_dir)    
     matcher = lambda im1, im2: model.match_pairs(im1, im2)
 
     # Eval
-    eval_megadepth_relapose(
+    eval_relapose(
         matcher, 
         data_root,
-        npz_root,
-        npz_list,
+        pairs,
+        model.name,
+        print_out=print_out,
+        debug=debug,
+    )
+
+def eval_scannet_relapose(
+    root_dir,
+    method,
+    benchmark='scannet',
+    ransac_thres=0.5,
+    print_out=False,
+    debug=False,
+):
+
+    # Init paths
+    npz_path = root_dir / 'third_party/aspanformer/assets/scannet_test_1500/test.npz'
+    intrinsic_path = root_dir / 'third_party/aspanformer/assets/scannet_test_1500/intrinsics.npz'
+    data_root = root_dir / 'data/datasets/scannet/test'
+
+    # Load pairs
+    pairs = load_scannet_pairs_npz(intrinsic_path, npz_path, data_root)
+
+    # Init model
+    model, config = init_model(method, benchmark, root_dir=root_dir)
+    matcher = lambda im1, im2: model.match_pairs(im1, im2)
+
+    # Eval
+    eval_relapose(
+        matcher,
+        data_root,
+        pairs,
         model.name,
         print_out=print_out,
         debug=debug,

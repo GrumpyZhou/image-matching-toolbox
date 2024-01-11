@@ -29,6 +29,8 @@ scannet:
     ckpt: 'pretrained/aspanformer/indoor.ckpt'
     coarsest_level: [15, 20]
     train_res: [480, 640]
+    test_res: [480, 640]
+    no_match_upscale: True # Intrinsics were pre-processed to [480, 640]
     border_rm: 0
 inloc:
     <<: *default

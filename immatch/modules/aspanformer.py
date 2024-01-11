@@ -37,7 +37,7 @@ class ASpanFormer(Matching):
         conf['match_coarse']['thr'] = args.match_threshold
 
         if args.test_res:
-            self.imsize = args.test_res[0]
+            self.imsize = args.test_res[::-1]
             self.im_padding = args.test_res[0] == args.test_res[1]
         self.model = ASpanFormer_(config=conf)
         ckpt_dict = torch.load(args.ckpt)
