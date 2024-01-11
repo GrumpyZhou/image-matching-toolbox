@@ -14,6 +14,11 @@ def lprint(ms, log=None):
         log.flush()
 
 def resize_im(wo, ho, imsize=None, dfactor=1, value_to_scale=max, enforce=False):
+    if not isinstance(imsize, int) and len(imsize) == 2:
+        # Resize to a fixed shape
+        wt, ht = imsize
+        scale = [wo / wt, ho / ht]
+        return wt, ht, scale
     wt, ht = wo, ho
 
     # Resize only if the image is too big
