@@ -13,6 +13,7 @@ We provide **scripts to evaluate** their predicted correspondences on common ben
 - [x] Add COTR (A naive wrapper without tuning parameters, 2022-3-29) 
 - [x] Add Aspanformer (2023-6-2)
 - [x] Add Megadepth relative pose estimation following LoFTR & Aspanformer (2023-6-2)
+- [x] Add ScanNet relative pose estimation following LoFTR & Aspanformer (2024-1-11)
 - [ ] Add support to eval on [Image Matching Challenge](https://www.cs.ubc.ca/research/image-matching-challenge/current/data)
 - [ ] Add scripts to eval on [SimLoc](https://github.com/simlocmatch/simlocmatch-benchmark) challenge.
 
