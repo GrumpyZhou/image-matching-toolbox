@@ -6,8 +6,8 @@ gdown --id 1UVjtuhTDmlvvVuUlEq_M5oJVImQl6z1f -O caps/caps-pretrained.pth
 
 # D2Net
 mkdir -p d2net
-wget https://dsmn.ml/files/d2-net/d2_tf.pth -O d2net/d2_tf.pth
-wget https://dsmn.ml/files/d2-net/d2_tf_no_phototourism.pth -O d2net/d2_tf_no_phototourism.pth
+wget https://dusmanu.com/files/d2-net/d2_tf.pth -O d2net/d2_tf.pth
+wget https://dusmanu.com/files/d2-net/d2_tf_no_phototourism.pth -O d2net/d2_tf_no_phototourism.pth
 
 # R2D2 Symbolic  links
 ln -s ../third_party/r2d2/models  r2d2
