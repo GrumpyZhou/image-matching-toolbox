@@ -9,6 +9,15 @@ coarse_default: &coarse_default
     max_keypoints: 4096
     nms_radius: 4
     imsize: 1024
+sat:
+    <<: *default
+    class: 'Patch2Pix'
+    no_match_upscale: True
+    ksize: 2
+    match_threshold: 0.15
+    coarse:
+        <<: *coarse_default
+        match_threshold: 0.1
 inloc:
     <<: *default
     match_threshold: 0.1

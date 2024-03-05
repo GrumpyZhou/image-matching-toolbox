@@ -8,6 +8,11 @@ default: &default
 example:
     <<: *default
     match_threshold: 0.5
+    no_match_upscale: True
+    imsize: -1
+sat:
+    <<: *default
+    match_threshold: 0.4
     imsize: -1
 hpatch:
     <<: *default
