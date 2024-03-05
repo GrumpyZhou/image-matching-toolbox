@@ -9,6 +9,10 @@ example:
     <<: *default
     match_threshold: 0.5
     imsize: -1
+sat:
+    <<: *default
+    match_threshold: 0.2
+    imsize: -1
 hpatch:
     <<: *default
     max_keypoints: 1024

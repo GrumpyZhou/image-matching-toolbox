@@ -12,6 +12,10 @@ example:
     <<: *default
     match_threshold: 0.5
     imsize: -1
+sat:
+    <<: *default
+    match_threshold: 0.1
+    imsize: -1
 hpatch:
     <<: *default
     min_size: 0
