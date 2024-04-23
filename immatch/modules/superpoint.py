@@ -2,8 +2,8 @@ import torch
 import numpy as np
 
 from third_party.superglue.models.superpoint import SuperPoint as SP
-from third_party.superglue.models.utils import read_image
 from .base import FeatureDetection, Matching
+from immatch.utils.data_io import load_gray_scale_tensor_cv
 
 
 class SuperPoint(FeatureDetection, Matching):
@@ -18,8 +18,11 @@ class SuperPoint(FeatureDetection, Matching):
         self.name = f"SuperPoint_r{rad}"
         print(f"Initialize {self.name}")
 
+    def load_im(self, im_path):
+        return load_gray_scale_tensor_cv(im_path, self.device, imsize=self.imsize)
+
     def load_and_extract(self, im_path):
-        _, gray, scale = read_image(im_path, self.device, [self.imsize], 0, True)
+        gray, scale, _ = self.load_im(im_path)
         kpts, desc = self.extract_features(gray)
         kpts = kpts * torch.tensor(scale).to(kpts)  # N, 2
         return kpts, desc
@@ -51,8 +54,8 @@ class SuperPoint(FeatureDetection, Matching):
         return matches, kpts1, kpts2, scores
 
     def match_pairs(self, im1_path, im2_path):
-        _, gray1, sc1 = read_image(im1_path, self.device, [self.imsize], 0, True)
-        _, gray2, sc2 = read_image(im2_path, self.device, [self.imsize], 0, True)
+        gray1, sc1, _ = self.load_im(im1_path)
+        gray2, sc2, _ = self.load_im(im2_path)
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(gray1, gray2)
         matches = upscale * matches
