@@ -10,9 +10,10 @@ from pathlib import Path
 from immatch.utils.model_helper import init_model
 import immatch.utils.metrics as M
 
+
 def compute_relapose_aspan(kpts0, kpts1, K0, K1, pix_thres=0.5, conf=0.99999):
-    """ Original code from ASpanFormer repo:
-        https://github.com/apple/ml-aspanformer/blob/main/src/utils/metrics.py
+    """Original code from ASpanFormer repo:
+    https://github.com/apple/ml-aspanformer/blob/main/src/utils/metrics.py
     """
 
     if len(kpts0) < 5:
@@ -26,7 +27,8 @@ def compute_relapose_aspan(kpts0, kpts1, K0, K1, pix_thres=0.5, conf=0.99999):
 
     # compute pose with cv2
     E, mask = cv2.findEssentialMat(
-        kpts0, kpts1, np.eye(3), threshold=ransac_thr, prob=conf, method=cv2.RANSAC)
+        kpts0, kpts1, np.eye(3), threshold=ransac_thr, prob=conf, method=cv2.RANSAC
+    )
     if E is None:
         print("\nE is None while trying to recover pose.\n")
         return None
@@ -42,6 +44,7 @@ def compute_relapose_aspan(kpts0, kpts1, K0, K1, pix_thres=0.5, conf=0.99999):
 
     return ret
 
+
 def load_scannet_pairs_npz(intrinsic_path, npz_path, data_root):
     # Load intrinsics
     intrinsics = dict(np.load(intrinsic_path))
@@ -49,25 +52,36 @@ def load_scannet_pairs_npz(intrinsic_path, npz_path, data_root):
     # Collect pairs
     pairs = []
     scene_info = dict(np.load(npz_path))
-    for scene_id, scene_sub, stem_name_1, stem_name_2 in tqdm(scene_info['name']):
-        scene_name = f'scene{scene_id:04d}_{scene_sub:02d}'
+    for scene_id, scene_sub, stem_name_1, stem_name_2 in tqdm(scene_info["name"]):
+        scene_name = f"scene{scene_id:04d}_{scene_sub:02d}"
 
         im1 = f"{scene_name}/color/{stem_name_1}.jpg"
         im2 = f"{scene_name}/color/{stem_name_2}.jpg"
-        K1 = K2 = np.array(intrinsics[scene_name].copy(), dtype=np.float32).reshape(3, 3)
+        K1 = K2 = np.array(intrinsics[scene_name].copy(), dtype=np.float32).reshape(
+            3, 3
+        )
 
         # Compute relative pose
-        T1 = np.linalg.inv(np.loadtxt(f"{data_root}/{scene_name}/pose/{stem_name_1}.txt", delimiter=' '))
-        T2 = np.linalg.inv(np.loadtxt(f"{data_root}/{scene_name}/pose/{stem_name_2}.txt", delimiter=' '))
+        T1 = np.linalg.inv(
+            np.loadtxt(
+                f"{data_root}/{scene_name}/pose/{stem_name_1}.txt", delimiter=" "
+            )
+        )
+        T2 = np.linalg.inv(
+            np.loadtxt(
+                f"{data_root}/{scene_name}/pose/{stem_name_2}.txt", delimiter=" "
+            )
+        )
         T12 = np.matmul(T2, np.linalg.inv(T1))
-        pairs.append(Namespace(
-            im1=im1, im2=im2, K1=K1, K2=K2, t=T12[:3, 3], R=T12[:3, :3]
-        ))
+        pairs.append(
+            Namespace(im1=im1, im2=im2, K1=K1, K2=K2, t=T12[:3, 3], R=T12[:3, :3])
+        )
     print(f"Loaded {len(pairs)} pairs.")
     return pairs
 
+
 def load_megadepth_pairs_npz(npz_root, npz_list):
-    with open(npz_list, 'r') as f:
+    with open(npz_list, "r") as f:
         npz_names = [name.split()[0] for name in f.readlines()]
     print(f"Parse {len(npz_names)} npz from {npz_list}.")
 
@@ -76,29 +90,37 @@ def load_megadepth_pairs_npz(npz_root, npz_list):
         scene_info = np.load(f"{npz_root}/{name}.npz", allow_pickle=True)
 
         # Collect pairs
-        for pair_info in scene_info['pair_infos']:
+        for pair_info in scene_info["pair_infos"]:
             (id1, id2), overlap, _ = pair_info
-            im1 = scene_info['image_paths'][id1].replace('Undistorted_SfM/', '')
-            im2 = scene_info['image_paths'][id2].replace('Undistorted_SfM/', '')                        
-            K1 = scene_info['intrinsics'][id1].astype(np.float32)
-            K2 = scene_info['intrinsics'][id2].astype(np.float32)
+            im1 = scene_info["image_paths"][id1].replace("Undistorted_SfM/", "")
+            im2 = scene_info["image_paths"][id2].replace("Undistorted_SfM/", "")
+            K1 = scene_info["intrinsics"][id1].astype(np.float32)
+            K2 = scene_info["intrinsics"][id2].astype(np.float32)
 
             # Compute relative pose
-            T1 = scene_info['poses'][id1]
-            T2 = scene_info['poses'][id2]
+            T1 = scene_info["poses"][id1]
+            T2 = scene_info["poses"][id2]
             T12 = np.matmul(T2, np.linalg.inv(T1))
-            pairs.append(Namespace(
-                im1=im1, im2=im2, overlap=overlap, 
-                K1=K1, K2=K2, t=T12[:3, 3], R=T12[:3, :3]
-            ))
+            pairs.append(
+                Namespace(
+                    im1=im1,
+                    im2=im2,
+                    overlap=overlap,
+                    K1=K1,
+                    K2=K2,
+                    t=T12[:3, 3],
+                    R=T12[:3, :3],
+                )
+            )
     print(f"Loaded {len(pairs)} pairs.")
     return pairs
+
 
 def eval_relapose(
     matcher,
     data_root,
     pairs,
-    method='',
+    method="",
     ransac_thres=0.5,
     thresholds=[1, 3, 5, 10, 20],
     print_out=False,
@@ -109,7 +131,7 @@ def eval_relapose(
 
     # Eval on pairs
     print(f">>> Start eval on Megadepth: method={method} rthres={ransac_thres} ... \n")
-    for i, pair in tqdm(enumerate(pairs), smoothing=.1, total=len(pairs)):
+    for i, pair in tqdm(enumerate(pairs), smoothing=0.1, total=len(pairs)):
         if debug and i > 10:
             break
 
@@ -123,21 +145,19 @@ def eval_relapose(
         matches, pts1, pts2 = match_res[0:3]
 
         # Compute pose errors
-        ret = compute_relapose_aspan(
-            pts1, pts2, K1, K2, pix_thres=ransac_thres
-        )
+        ret = compute_relapose_aspan(pts1, pts2, K1, K2, pix_thres=ransac_thres)
 
         if ret is None:
-            statis['failed'].append(i)
-            statis['R_errs'].append(np.inf)
-            statis['t_errs'].append(np.inf)
-            statis['inliers'].append(np.array([]).astype(np.bool_))
+            statis["failed"].append(i)
+            statis["R_errs"].append(np.inf)
+            statis["t_errs"].append(np.inf)
+            statis["inliers"].append(np.array([]).astype(np.bool_))
         else:
             R, t, inliers = ret
             R_err, t_err = M.cal_relapose_error(R, R_gt, t, t_gt)
-            statis['R_errs'].append(R_err)
-            statis['t_errs'].append(t_err)
-            statis['inliers'].append(inliers.sum() / len(pts1))
+            statis["R_errs"].append(R_err)
+            statis["t_errs"].append(t_err)
+            statis["inliers"].append(inliers.sum() / len(pts1))
             if print_out:
                 print(f"#M={len(matches)} R={R_err:.3f}, t={t_err:.3f}")
 
@@ -145,30 +165,36 @@ def eval_relapose(
     pose_auc = M.cal_relapose_auc(statis, thresholds=thresholds)
     return pose_auc
 
+
 def eval_megadepth_relapose(
     root_dir,
     method,
-    benchmark='megadepth',
+    benchmark="megadepth",
     ransac_thres=0.5,
     print_out=False,
     debug=False,
 ):
 
     # Init paths
-    npz_root = root_dir / 'third_party/aspanformer/assets/megadepth_test_1500_scene_info'
-    npz_list = root_dir / 'third_party/aspanformer/assets/megadepth_test_1500_scene_info/megadepth_test_1500.txt'
-    data_root = root_dir / 'data/datasets/MegaDepth_undistort'
+    npz_root = (
+        root_dir / "third_party/aspanformer/assets/megadepth_test_1500_scene_info"
+    )
+    npz_list = (
+        root_dir
+        / "third_party/aspanformer/assets/megadepth_test_1500_scene_info/megadepth_test_1500.txt"
+    )
+    data_root = root_dir / "data/datasets/MegaDepth_undistort"
 
     # Load pairs
     pairs = load_megadepth_pairs_npz(npz_root, npz_list)
-        
+
     # Init model
-    model, config = init_model(method, benchmark, root_dir=root_dir)    
+    model, config = init_model(method, benchmark, root_dir=root_dir)
     matcher = lambda im1, im2: model.match_pairs(im1, im2)
 
     # Eval
     eval_relapose(
-        matcher, 
+        matcher,
         data_root,
         pairs,
         model.name,
@@ -176,19 +202,22 @@ def eval_megadepth_relapose(
         debug=debug,
     )
 
+
 def eval_scannet_relapose(
     root_dir,
     method,
-    benchmark='scannet',
+    benchmark="scannet",
     ransac_thres=0.5,
     print_out=False,
     debug=False,
 ):
 
     # Init paths
-    npz_path = root_dir / 'third_party/aspanformer/assets/scannet_test_1500/test.npz'
-    intrinsic_path = root_dir / 'third_party/aspanformer/assets/scannet_test_1500/intrinsics.npz'
-    data_root = root_dir / 'data/datasets/scannet/test'
+    npz_path = root_dir / "third_party/aspanformer/assets/scannet_test_1500/test.npz"
+    intrinsic_path = (
+        root_dir / "third_party/aspanformer/assets/scannet_test_1500/intrinsics.npz"
+    )
+    data_root = root_dir / "data/datasets/scannet/test"
 
     # Load pairs
     pairs = load_scannet_pairs_npz(intrinsic_path, npz_path, data_root)
@@ -208,18 +237,20 @@ def eval_scannet_relapose(
     )
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Benchmark Relative Pose')
-    parser.add_argument('--gpu', '-gpu', type=str, default='0')
-    parser.add_argument('--config', type=str, required=True)
-    parser.add_argument('--benchmark', type=str, required=True, choices=['scannet', 'megadepth'])
-    parser.add_argument('--root_dir', type=str, default='.')
-    parser.add_argument('--ransac_thres', type=float, default=0.5)
-    parser.add_argument('--print_out', action='store_true')
-    parser.add_argument('--debug', action='store_true')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Benchmark Relative Pose")
+    parser.add_argument("--gpu", "-gpu", type=str, default="0")
+    parser.add_argument("--config", type=str, required=True)
+    parser.add_argument(
+        "--benchmark", type=str, required=True, choices=["scannet", "megadepth"]
+    )
+    parser.add_argument("--root_dir", type=str, default=".")
+    parser.add_argument("--ransac_thres", type=float, default=0.5)
+    parser.add_argument("--print_out", action="store_true")
+    parser.add_argument("--debug", action="store_true")
 
     args = parser.parse_args()
-    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
 
     eval(f"eval_{args.benchmark}_relapose")(
         Path(args.root_dir),

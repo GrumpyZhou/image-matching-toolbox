@@ -7,48 +7,49 @@ from third_party.loftr.src.loftr import LoFTR as LoFTR_, default_cfg
 from .base import Matching
 from immatch.utils.data_io import load_gray_scale_tensor_cv
 
+
 class LoFTR(Matching):
     def __init__(self, args):
         super().__init__()
         if type(args) == dict:
             args = Namespace(**args)
 
-        self.imsize = args.imsize        
+        self.imsize = args.imsize
         self.match_threshold = args.match_threshold
         self.no_match_upscale = args.no_match_upscale
         self.eval_coarse = args.eval_coarse
 
         # Load model
         conf = dict(default_cfg)
-        conf['match_coarse']['thr'] = self.match_threshold
+        conf["match_coarse"]["thr"] = self.match_threshold
         self.model = LoFTR_(config=conf)
         ckpt_dict = torch.load(args.ckpt)
-        self.model.load_state_dict(ckpt_dict['state_dict'])
+        self.model.load_state_dict(ckpt_dict["state_dict"])
         self.model = self.model.eval().to(self.device)
 
         # Name the method
-        self.ckpt_name = args.ckpt.split('/')[-1].split('.')[0]
-        self.name = f'LoFTR_{self.ckpt_name}'        
+        self.ckpt_name = args.ckpt.split("/")[-1].split(".")[0]
+        self.name = f"LoFTR_{self.ckpt_name}"
         if self.no_match_upscale:
-            self.name += '_noms'
-        print(f'Initialize {self.name}')
-        
+            self.name += "_noms"
+        print(f"Initialize {self.name}")
+
     def load_im(self, im_path):
         return load_gray_scale_tensor_cv(
             im_path, self.device, imsize=self.imsize, dfactor=8
         )
 
     def match_inputs_(self, gray1, gray2):
-        batch = {'image0': gray1, 'image1': gray2}
+        batch = {"image0": gray1, "image1": gray2}
         self.model(batch)
 
         if self.eval_coarse:
-            kpts1 = batch['mkpts0_c'].cpu().numpy()
-            kpts2 = batch['mkpts1_c'].cpu().numpy()
+            kpts1 = batch["mkpts0_c"].cpu().numpy()
+            kpts2 = batch["mkpts1_c"].cpu().numpy()
         else:
-            kpts1 = batch['mkpts0_f'].cpu().numpy()
-            kpts2 = batch['mkpts1_f'].cpu().numpy()
-        scores = batch['mconf'].cpu().numpy()
+            kpts1 = batch["mkpts0_f"].cpu().numpy()
+            kpts2 = batch["mkpts1_f"].cpu().numpy()
+        scores = batch["mconf"].cpu().numpy()
         matches = np.concatenate([kpts1, kpts2], axis=1)
         return matches, kpts1, kpts2, scores
 

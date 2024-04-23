@@ -19,13 +19,14 @@ try:
     import MinkowskiEngine
     import sys
     from pathlib import Path
-    
-    # To prevent naming conflict as D2Net also has module called lib   
-    d2net_path = Path(__file__).parent / 'modules/../../third_party/d2net'
+
+    # To prevent naming conflict as D2Net also has module called lib
+    d2net_path = Path(__file__).parent / "modules/../../third_party/d2net"
     sys.path.remove(str(d2net_path))
-    
-    from .modules.sparsencnet import SparseNCNet     
+
+    from .modules.sparsencnet import SparseNCNet
+
     use_sparsencnet = True
 except ImportError as e:
     print(f"Can not import sparsencnet: {e}")
-    pass    
+    pass
