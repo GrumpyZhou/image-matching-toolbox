@@ -3,9 +3,9 @@ from argparse import Namespace
 import numpy as np
 
 from third_party.superglue.models.superglue import SuperGlue as SG
-from third_party.superglue.models.utils import read_image
 from .superpoint import SuperPoint
 from .base import Matching
+from immatch.utils.data_io import load_gray_scale_tensor_cv
 
 
 class SuperGlue(Matching):
@@ -19,6 +19,9 @@ class SuperGlue(Matching):
         rad = self.detector.model.config["nms_radius"]
         self.name = f"SuperGlue_r{rad}"
         print(f"Initialize {self.name}")
+
+    def load_im(self, im_path):
+        return load_gray_scale_tensor_cv(im_path, self.device, imsize=self.imsize)
 
     def match_inputs_(self, gray1, gray2):
         # Detect SuperPoint features
@@ -47,8 +50,8 @@ class SuperGlue(Matching):
         return matches, kpts1, kpts2, scores
 
     def match_pairs(self, im1_path, im2_path):
-        _, gray1, sc1 = read_image(im1_path, self.device, [self.imsize], 0, True)
-        _, gray2, sc2 = read_image(im2_path, self.device, [self.imsize], 0, True)
+        gray1, sc1, _ = self.load_im(im1_path)
+        gray2, sc2, _ = self.load_im(im2_path)
         upscale = np.array([sc1 + sc2])
         matches, kpts1, kpts2, scores = self.match_inputs_(gray1, gray2)
 
